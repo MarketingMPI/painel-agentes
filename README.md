@@ -16,6 +16,12 @@ Cena 2D no topo com os 4 agentes (Atendente, Monitor, Validador e Cérebro): tra
 - Dados: função `public.agentes_status()`, alimentada a cada minuto pelo fluxo do n8n "[AGENTES] Painel - Status dos agentes" (`build_status.py`).
 - Código: `escritorio.js` e `escritorio.css`.
 
+## Leads atendidos pelo bot
+Lista com nome e WhatsApp de quem conversou com o Atendente (mesmos filtros de período e origem) e botão "Ver conversa" com as mensagens, só leitura.
+- Os dados vêm ao vivo do Pipedrive pelo webhook do n8n `POST /webhook/painel-conversas` (fluxo "[AGENTES] Painel - API das conversas", `build_conversas_api.py`).
+- O webhook exige o token de login (conta @meupatrimonio.com confirmada), só abre conversas que o bot conduziu e não guarda nada nas execuções do n8n.
+- Código: `conversas.js` e `conversas.css`.
+
 ## Métricas
 Cada conversa entra no período pela data em que começou.
 - **Requalificado:** o bot viu que o lead tem perfil e passou para um consultor.

@@ -4,10 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src https://cxbgpbibbxfhvdfhyvpx.supabase.co; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src https://cxbgpbibbxfhvdfhyvpx.supabase.co https://n8n.meupatrimonio.com; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>Painel dos Agentes | Meu Patrimônio</title>
 <link rel="icon" href="assets/favicon.png">
 <link rel="stylesheet" href="escritorio.css">
+<link rel="stylesheet" href="conversas.css">
 <style>
 @font-face{font-family:'Campton';src:url(assets/CamptonBook.otf) format('opentype');font-weight:400;font-display:swap}
 @font-face{font-family:'Campton';src:url(assets/CamptonMedium.otf) format('opentype');font-weight:500;font-display:swap}
@@ -157,6 +158,7 @@ svg.chart text{font-family:inherit;fill:#8a929a;font-size:11px}
     </div>
 
     <div id="conteudo"></div>
+    <div id="leads"></div>
 
     <div class="notas">
       <b>Como ler:</b> cada conversa entra no período pela data em que começou.
@@ -329,6 +331,7 @@ function abreApp() {
   $('usr').innerHTML = `<span>${ESC(x ? x.e : '')}</span><button type="button" id="bsair">Sair</button>`;
   render(); carregar();
   if (window.Escritorio) Escritorio.iniciar();
+  if (window.Leads) Leads.iniciar();
 }
 document.addEventListener('click', async ev => {
   const p = ev.target.closest('#fper button'), o = ev.target.closest('#forg button');
@@ -353,5 +356,6 @@ const x0 = lerSessao();
 if (x0 && DOMINIO_OK(x0.e)) abreApp(); else mostraLogin('');
 </script>
 <script src="escritorio.js"></script>
+<script src="conversas.js"></script>
 </body>
 </html>
