@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src https://cxbgpbibbxfhvdfhyvpx.supabase.co; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Painel dos Agentes | Meu Patrimônio</title>
+<link rel="icon" href="assets/favicon.png">
+<style>
+@font-face{font-family:'Campton';src:url(assets/CamptonBook.otf) format('opentype');font-weight:400;font-display:swap}
+@font-face{font-family:'Campton';src:url(assets/CamptonMedium.otf) format('opentype');font-weight:500;font-display:swap}
+@font-face{font-family:'Campton';src:url(assets/CamptonSemiBold.otf) format('opentype');font-weight:600;font-display:swap}
+:root{
+  --verde:#00503c;--verde-prof:#003326;--lima:#00a611;--lima-cl:#61ce70;
+  --fg:#1c1c1c;--muted:#f4f5f4;--muted-fg:#69727d;--border:#e4e7e5;--card:#fff;
+  --c-req:#00a611;--c-fora:#9aa3ab;--c-sem:#e0a43a;--c-eq:#3b6fd8;--c-and:#c9ead0;
+  --sh-xs:0 1px 2px rgba(16,24,20,.05);--sh-md:0 4px 14px rgba(16,24,20,.07);--r:12px
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:'Campton',system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--fg);background:#fafbfa;-webkit-font-smoothing:antialiased}
+button{font:inherit;cursor:pointer}
+.hidden{display:none!important}
+
+/* ---------- login ---------- */
+#lock{min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(160deg,var(--verde) 0%,var(--verde-prof) 100%)}
+.lbox{width:100%;max-width:380px;background:#fff;border-radius:16px;padding:32px 28px;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+.lbox img{width:44px;height:44px;display:block;margin-bottom:14px}
+.lbox h1{font-size:22px;font-weight:600;margin:0 0 4px}
+.lbox p.sub{margin:0 0 22px;color:var(--muted-fg);font-size:14px;line-height:1.4}
+.lbox input[type=email],.lbox input[type=password]{width:100%;padding:11px 13px;border:1px solid var(--border);border-radius:9px;font:inherit;font-size:15px;margin-bottom:10px;outline:none}
+.lbox input:focus{border-color:var(--verde);box-shadow:0 0 0 3px rgba(0,80,60,.12)}
+.lrem{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted-fg);margin:2px 0 16px}
+.lbtn{width:100%;padding:12px;border:0;border-radius:9px;background:var(--verde);color:#fff;font-weight:600;font-size:15px}
+.lbtn:disabled{opacity:.6}
+.err{min-height:20px;margin-top:12px;font-size:13px;color:#b42318;line-height:1.4}
+.err.ok{color:var(--verde)}
+.lfoot{margin-top:18px;font-size:12.5px;color:var(--muted-fg);line-height:1.5}
+.lfoot a{color:var(--verde);font-weight:500}
+
+/* ---------- topo ---------- */
+header{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--border)}
+.hin{max-width:1180px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:12px}
+.hin img{width:30px;height:30px}
+.htit{font-weight:600;font-size:17px;line-height:1.1}
+.htit small{display:block;font-weight:400;font-size:12px;color:var(--muted-fg);margin-top:2px}
+.usr{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted-fg)}
+.usr button{border:1px solid var(--border);background:#fff;border-radius:8px;padding:6px 11px;font-size:13px;color:var(--fg)}
+main{max-width:1180px;margin:0 auto;padding:22px 20px 40px}
+
+/* ---------- agente ---------- */
+.agente{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh-xs);margin-bottom:18px}
+.ag-ic{width:42px;height:42px;border-radius:10px;background:#e8f6ea;display:grid;place-items:center;flex:none}
+.ag-ic svg{width:22px;height:22px;stroke:var(--verde)}
+.ag-t{font-weight:600;font-size:16px}
+.ag-s{font-size:13px;color:var(--muted-fg);margin-top:2px;line-height:1.4}
+.ag-on{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--verde);background:#e8f6ea;padding:5px 10px;border-radius:999px;white-space:nowrap}
+.ag-on i{width:7px;height:7px;border-radius:50%;background:var(--lima);display:block}
+
+/* ---------- filtros ---------- */
+.filtros{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin-bottom:18px}
+.flab{font-size:12px;color:var(--muted-fg);margin-right:6px}
+.seg{display:inline-flex;background:var(--muted);border:1px solid var(--border);border-radius:10px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;border-radius:7px;padding:6px 11px;font-size:13px;color:var(--muted-fg)}
+.seg button.on{background:#fff;color:var(--fg);box-shadow:var(--sh-xs);font-weight:500}
+.periodo-txt{font-size:12.5px;color:var(--muted-fg)}
+
+/* ---------- cartões ---------- */
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
+.kpi{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:15px 16px;box-shadow:var(--sh-xs);min-width:0}
+.kpi .k-l{font-size:13px;color:var(--muted-fg);display:flex;align-items:center;gap:7px}
+.kpi .k-l i{width:9px;height:9px;border-radius:3px;display:block;flex:none}
+.kpi .k-v{font-size:30px;font-weight:600;margin-top:6px;line-height:1}
+.kpi .k-s{font-size:12px;color:var(--muted-fg);margin-top:7px;line-height:1.35}
+.kpi.dest{background:linear-gradient(150deg,var(--verde),var(--verde-prof));border:0;color:#fff}
+.kpi.dest .k-l,.kpi.dest .k-s{color:rgba(255,255,255,.78)}
+
+.grid2{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:12px}
+.card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:18px;box-shadow:var(--sh-xs);min-width:0}
+.card h3{margin:0 0 3px;font-size:15px;font-weight:600}
+.card .c-s{font-size:12.5px;color:var(--muted-fg);margin-bottom:14px}
+.leg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted-fg);margin-top:10px}
+.leg span{display:flex;align-items:center;gap:6px}
+.leg i{width:10px;height:10px;border-radius:3px;display:block}
+svg.chart{width:100%;height:auto;display:block}
+svg.chart text{font-family:inherit;fill:#8a929a;font-size:11px}
+
+.dist{display:flex;height:14px;border-radius:7px;overflow:hidden;background:var(--muted);margin:4px 0 14px}
+.dist div{height:100%}
+.drow{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--border);font-size:14px}
+.drow:first-of-type{border-top:0}
+.drow i{width:10px;height:10px;border-radius:3px;display:block;flex:none}
+.drow b{margin-left:auto;font-weight:600}
+.drow em{font-style:normal;color:var(--muted-fg);font-size:12.5px;width:44px;text-align:right}
+.lemb{margin-top:14px;padding:12px 14px;background:var(--muted);border-radius:10px;font-size:13px;line-height:1.5;color:#3d454c}
+
+.vazio{padding:40px 10px;text-align:center;color:var(--muted-fg);font-size:14px}
+.notas{margin-top:18px;font-size:12.5px;color:var(--muted-fg);line-height:1.6;background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:14px 18px}
+.notas b{color:var(--fg);font-weight:500}
+.rodape{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:14px;font-size:12px;color:var(--muted-fg)}
+.aviso{background:#fff4e5;border:1px solid #f5d9a8;color:#7a4b00;border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:14px}
+
+@media (max-width:900px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:520px){
+  .hin{padding:10px 14px}.htit small{display:none}.usr span{display:none}
+  main{padding:16px 14px 32px}.kpi .k-v{font-size:26px}
+  .agente{flex-wrap:wrap}.ag-on{margin-left:0}
+}
+</style>
+</head>
+<body>
+
+<div id="lock">
+  <form class="lbox" id="lockf" autocomplete="on">
+    <img src="assets/favicon.png" alt="">
+    <h1>Painel dos Agentes</h1>
+    <p class="sub">Acesso exclusivo para e-mails @meupatrimonio.com. Use a mesma conta do Painel Operacional.</p>
+    <input type="email" id="lem" placeholder="seu.nome@meupatrimonio.com" autocomplete="username" required>
+    <input type="password" id="lpw" placeholder="Senha" autocomplete="current-password" required>
+    <label class="lrem"><input type="checkbox" id="rem" checked> Manter conectado neste aparelho</label>
+    <button class="lbtn" id="lbtn" type="submit">Entrar</button>
+    <div class="err" id="err"></div>
+    <div class="lfoot">Ainda não tem conta ou esqueceu a senha? Crie ou recupere no
+      <a href="https://painelmkt.meupatrimonio.com/" target="_blank" rel="noopener">Painel Operacional</a> e volte aqui.</div>
+  </form>
+</div>
+
+<div id="app" class="hidden">
+  <header><div class="hin">
+    <img src="assets/favicon.png" alt="">
+    <div class="htit">Painel dos Agentes<small>Meu Patrimônio · agentes de IA</small></div>
+    <div class="usr" id="usr"></div>
+  </div></header>
+  <main>
+    <div class="agente">
+      <div class="ag-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.4L3 21l2.1-5.6A8.4 8.4 0 1 1 21 11.5z"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"/></svg></div>
+      <div>
+        <div class="ag-t">Atendente · requalificação no WhatsApp</div>
+        <div class="ag-s">Conversa com os leads que ficaram fora do perfil no formulário (LP do Diagnóstico) e com quem chega pelo botão do site.</div>
+      </div>
+      <div class="ag-on" id="agon"><i></i> No ar</div>
+    </div>
+
+    <div class="filtros">
+      <div><span class="flab">Período</span><div class="seg" id="fper">
+        <button data-p="hoje">Hoje</button><button data-p="7d">7 dias</button><button data-p="30d">30 dias</button><button data-p="mes">Este mês</button><button data-p="tudo">Tudo</button>
+      </div></div>
+      <div><span class="flab">Origem</span><div class="seg" id="forg">
+        <button data-o="todas">Todas</button><button data-o="lp">LP do Diagnóstico</button><button data-o="site">Botão do site</button>
+      </div></div>
+      <div class="periodo-txt" id="ptxt"></div>
+    </div>
+
+    <div id="conteudo"></div>
+
+    <div class="notas">
+      <b>Como ler:</b> cada conversa entra no período pela data em que começou.
+      <b>Requalificado</b> = o bot viu que o lead tem perfil e passou para um consultor (Funil Alpha).
+      <b>Fora do perfil</b> = continua sem perfil: recebe o link dos materiais educacionais e vai para a Base de Relacionamento.
+      <b>Pararam de responder</b> = o lead sumiu por mais de 24 h e o bot encerrou sozinho (já está somado em requalificados ou fora do perfil).
+      <b>Taxa de requalificação</b> = requalificados ÷ (requalificados + fora do perfil).
+      <b>Passaram para a equipe</b> = alguém do time assumiu a conversa antes do bot decidir.
+    </div>
+    <div class="rodape"><span id="atual"></span><span>Atualiza sozinho a cada 2 minutos</span></div>
+  </main>
+</div>
+
+<script>
+'use strict';
+/* ---------- acesso (Supabase MP GLOBAL, mesmas contas do Painel Operacional) ---------- */
+const SB = {url: 'https://cxbgpbibbxfhvdfhyvpx.supabase.co', key: 'sb_publishable_-BoisE7eh2RStAF9m5H1Ug_MYPKiNa1'};
+const SKEY = 'mp-agentes-sessao';
+const DOMINIO_OK = e => /^[a-z0-9._%+-]+@meupatrimonio\.com$/.test(String(e || '').trim().toLowerCase());
+const MSG_DOMINIO = 'Acesso permitido somente para e-mails @meupatrimonio.com.';
+const ESC = x => String(x ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+const $ = id => document.getElementById(id);
+
+async function sb(path, {method = 'POST', body, token} = {}) {
+  try {
+    const r = await fetch(SB.url + path, {method, headers: Object.assign({apikey: SB.key, 'Content-Type': 'application/json'}, token ? {Authorization: 'Bearer ' + token} : {}),
+      body: body === undefined ? undefined : JSON.stringify(body)});
+    let j = null; try { j = await r.json(); } catch (e) { /* sem corpo */ }
+    return {ok: r.ok, status: r.status, j};
+  } catch (e) { return {ok: false, status: 0, j: null}; }
+}
+const jwtEmail = t => { try { return JSON.parse(atob(t.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))).email || ''; } catch (e) { return ''; } };
+function salvaSessao(x, lembrar) {
+  const v = JSON.stringify({a: x.access_token, r: x.refresh_token, x: Date.now() + (Number(x.expires_in) || 3600) * 1000, e: jwtEmail(x.access_token)});
+  try { (lembrar ? localStorage : sessionStorage).setItem(SKEY, v); (lembrar ? sessionStorage : localStorage).removeItem(SKEY); } catch (e) { /* */ }
+}
+function lerSessao() {
+  try { const l = localStorage.getItem(SKEY), v = sessionStorage.getItem(SKEY) || l; return v ? Object.assign(JSON.parse(v), {lembrar: !!l}) : null; } catch (e) { return null; }
+}
+function limpaSessao() { try { localStorage.removeItem(SKEY); sessionStorage.removeItem(SKEY); } catch (e) { /* */ } }
+async function renova(x) {
+  if (!x || !x.r) return null;
+  const r = await sb('/auth/v1/token?grant_type=refresh_token', {body: {refresh_token: x.r}});
+  if (!r.ok) return null;
+  salvaSessao(r.j, x.lembrar); return lerSessao();
+}
+function erroAuth(r) {
+  const j = r.j || {}, c = j.error_code || j.code || '', m = String(j.msg || j.message || j.error_description || '');
+  if (!r.status) return 'Sem conexão. Verifique a internet e tente de novo.';
+  if (c === 'invalid_credentials' || /invalid login/i.test(m)) return 'E-mail ou senha incorretos.';
+  if (c === 'email_not_confirmed' || /not confirmed/i.test(m)) return 'Confirme seu e-mail antes de entrar (link enviado quando você criou a conta).';
+  if (/rate|too many/i.test(c + m) || r.status === 429) return 'Muitas tentativas seguidas. Aguarde alguns minutos.';
+  return 'Não foi possível entrar agora. Tente de novo em instantes.';
+}
+
+/* ---------- dados ---------- */
+let DADOS = null, CARREGANDO = false;
+const S = {p: 'tudo', o: 'todas'};
+async function carregar() {
+  if (CARREGANDO) return; CARREGANDO = true;
+  try {
+    let x = lerSessao();
+    if (!x) return sair();
+    if (Date.now() > x.x - 60000) { x = await renova(x); if (!x) return sair(); }
+    let r = await sb('/rest/v1/rpc/agentes_painel', {body: {}, token: x.a});
+    if (r.status === 401) { x = await renova(x); if (!x) return sair(); r = await sb('/rest/v1/rpc/agentes_painel', {body: {}, token: x.a}); }
+    if (r.status === 403 || r.status === 400) { limpaSessao(); return mostraLogin(MSG_DOMINIO); }
+    if (!r.ok || !r.j) { DADOS = DADOS || null; return render('Não consegui atualizar os dados agora. Vou tentar de novo em 2 minutos.'); }
+    DADOS = r.j; render();
+  } finally { CARREGANDO = false; }
+}
+
+/* ---------- período ---------- */
+const TZ = 'America/Sao_Paulo';
+const diaBR = d => new Intl.DateTimeFormat('en-CA', {timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit'}).format(d); // AAAA-MM-DD
+const fmtDia = s => s.slice(8, 10) + '/' + s.slice(5, 7);
+const addDias = (s, n) => { const d = new Date(s + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
+function intervalo(convs) {
+  const hoje = diaBR(new Date());
+  const prim = convs.length ? convs.map(c => diaBR(new Date(c.inicio))).sort()[0] : hoje;
+  if (S.p === 'hoje') return [hoje, hoje];
+  if (S.p === '7d') return [addDias(hoje, -6), hoje];
+  if (S.p === '30d') return [addDias(hoje, -29), hoje];
+  if (S.p === 'mes') return [hoje.slice(0, 8) + '01', hoje];
+  return [prim < hoje ? prim : hoje, hoje];
+}
+
+/* ---------- tela ---------- */
+const nf = new Intl.NumberFormat('pt-BR');
+const pct = (a, b) => b ? (Math.round(a / b * 1000) / 10).toLocaleString('pt-BR') + '%' : '–';
+const RES = [
+  ['requalificado', 'Requalificados', 'var(--c-req)'],
+  ['desqualificado', 'Fora do perfil', 'var(--c-fora)'],
+  ['sem_interesse', 'Sem interesse', 'var(--c-sem)'],
+  ['humano', 'Passaram para a equipe', 'var(--c-eq)'],
+  ['conversando', 'Em andamento', 'var(--c-and)'],
+];
+function kpi(l, v, s, cor, dest) {
+  return `<div class="kpi${dest ? ' dest' : ''}"><div class="k-l">${cor ? `<i style="background:${cor}"></i>` : ''}${l}</div><div class="k-v">${v}</div><div class="k-s">${s || '&nbsp;'}</div></div>`;
+}
+function grafico(convs, de, ate) {
+  const dias = []; for (let d = de; d <= ate; d = addDias(d, 1)) dias.push(d);
+  if (dias.length > 62) dias.splice(0, dias.length - 62);
+  const cont = dias.map(d => { const o = {}; RES.forEach(r => o[r[0]] = 0); convs.filter(c => diaBR(new Date(c.inicio)) === d).forEach(c => o[c.status] = (o[c.status] || 0) + 1); return o; });
+  const tot = cont.map(o => RES.reduce((s, r) => s + o[r[0]], 0));
+  const max = Math.max(2, ...tot), passo = max <= 5 ? 1 : Math.ceil(max / 4);
+  const topo = Math.ceil(max / passo) * passo;
+  const W = 640, H = 220, L = 28, B = 26, T = 8, larg = (W - L - 6) / dias.length, bw = Math.min(34, larg * .62);
+  const y = v => T + (H - T - B) * (1 - v / topo);
+  let s = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Conversas por dia">`;
+  for (let v = 0; v <= topo; v += passo) s += `<line x1="${L}" x2="${W}" y1="${y(v)}" y2="${y(v)}" stroke="#eef0ee"/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${v}</text>`;
+  const cada = Math.ceil(dias.length / 10);
+  dias.forEach((d, i) => {
+    const x = L + i * larg + (larg - bw) / 2; let acum = 0;
+    RES.forEach(r => { const n = cont[i][r[0]]; if (!n) return;
+      s += `<rect x="${x}" y="${y(acum + n)}" width="${bw}" height="${y(acum) - y(acum + n)}" fill="${r[2]}" rx="2"><title>${fmtDia(d)} · ${r[1]}: ${n}</title></rect>`; acum += n; });
+    if (i % cada === 0 || i === dias.length - 1) s += `<text x="${x + bw / 2}" y="${H - 8}" text-anchor="middle">${fmtDia(d)}</text>`;
+  });
+  return s + '</svg>';
+}
+function render(aviso) {
+  for (const b of document.querySelectorAll('#fper button')) b.classList.toggle('on', b.dataset.p === S.p);
+  for (const b of document.querySelectorAll('#forg button')) b.classList.toggle('on', b.dataset.o === S.o);
+  const box = $('conteudo');
+  if (!DADOS) { box.innerHTML = aviso ? `<div class="aviso">${ESC(aviso)}</div>` : '<div class="vazio">Carregando…</div>'; return; }
+  const todas = (DADOS.conversas || []).filter(c => S.o === 'todas' || (c.origem || 'lp') === S.o);
+  const [de, ate] = intervalo(DADOS.conversas || []);
+  $('ptxt').textContent = de === ate ? fmtDia(de) : fmtDia(de) + ' a ' + fmtDia(ate);
+  const cv = todas.filter(c => { const d = diaBR(new Date(c.inicio)); return d >= de && d <= ate; });
+  const n = k => cv.filter(c => c.status === k).length;
+  const req = n('requalificado'), fora = n('desqualificado'), sem = n('sem_interesse'), eq = n('humano'), and = n('conversando');
+  const aband = cv.filter(c => c.abandono).length, lem = cv.filter(c => c.lembrete).length, volt = cv.filter(c => c.lembrete && c.voltou).length;
+  const decididas = req + fora;
+  let h = aviso ? `<div class="aviso">${ESC(aviso)}</div>` : '';
+  h += '<div class="kpis">' +
+    kpi('Conversas', nf.format(cv.length), 'iniciadas no período') +
+    kpi('Taxa de requalificação', pct(req, decididas), decididas ? `${req} de ${decididas} conversas decididas` : 'nenhuma conversa decidida ainda', null, true) +
+    kpi('Requalificados', nf.format(req), 'passaram para um consultor', 'var(--c-req)') +
+    kpi('Fora do perfil', nf.format(fora), 'foram para a Base de Relacionamento', 'var(--c-fora)') +
+    kpi('Em andamento', nf.format(and), 'o bot ainda está conversando', 'var(--c-and)') +
+    kpi('Pararam de responder', nf.format(aband), 'o bot encerrou após 24 h sem resposta') +
+    kpi('Sem interesse', nf.format(sem), 'pediram para não continuar', 'var(--c-sem)') +
+    kpi('Passaram para a equipe', nf.format(eq), 'alguém do time assumiu antes', 'var(--c-eq)') +
+    '</div>';
+  if (!cv.length) {
+    h += `<div class="card"><div class="vazio">Nenhuma conversa começou neste período${S.o !== 'todas' ? ' com esta origem' : ''}.</div></div>`;
+  } else {
+    const dist = RES.map(r => [r, n(r[0])]).filter(x => x[1]);
+    h += '<div class="grid2">' +
+      `<div class="card"><h3>Conversas por dia</h3><div class="c-s">Pelo dia em que a conversa começou, colorido pelo resultado atual</div>${grafico(cv, de, ate)}` +
+      `<div class="leg">${RES.map(r => `<span><i style="background:${r[2]}"></i>${r[1]}</span>`).join('')}</div></div>` +
+      `<div class="card"><h3>Resultado das conversas</h3><div class="c-s">${nf.format(cv.length)} conversa${cv.length > 1 ? 's' : ''} no período</div>` +
+      `<div class="dist">${dist.map(([r, v]) => `<div style="width:${v / cv.length * 100}%;background:${r[2]}" title="${r[1]}: ${v}"></div>`).join('')}</div>` +
+      RES.map(r => `<div class="drow"><i style="background:${r[2]}"></i>${r[1]}<b>${n(r[0])}</b><em>${pct(n(r[0]), cv.length)}</em></div>`).join('') +
+      `<div class="lemb">Lembretes enviados: <b>${lem}</b> · voltaram a responder depois do lembrete: <b>${volt}</b>${lem ? ' (' + pct(volt, lem) + ')' : ''}</div></div>` +
+      '</div>';
+  }
+  box.innerHTML = h;
+  const g = DADOS.gerado ? new Date(DADOS.gerado) : new Date();
+  $('atual').textContent = 'Dados de ' + new Intl.DateTimeFormat('pt-BR', {timeZone: TZ, day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'}).format(g).replace(',', ' às');
+  try { localStorage.setItem('mp-agentes-filtros', JSON.stringify(S)); } catch (e) { /* */ }
+}
+
+/* ---------- navegação ---------- */
+function mostraLogin(msg) { $('app').classList.add('hidden'); $('lock').classList.remove('hidden'); $('err').className = 'err'; $('err').textContent = msg || ''; $('lbtn').disabled = false; }
+function sair() { limpaSessao(); mostraLogin(''); }
+function abreApp() {
+  const x = lerSessao();
+  $('lock').classList.add('hidden'); $('app').classList.remove('hidden');
+  $('usr').innerHTML = `<span>${ESC(x ? x.e : '')}</span><button type="button" id="bsair">Sair</button>`;
+  render(); carregar();
+}
+document.addEventListener('click', async ev => {
+  const p = ev.target.closest('#fper button'), o = ev.target.closest('#forg button');
+  if (p) { S.p = p.dataset.p; render(); }
+  if (o) { S.o = o.dataset.o; render(); }
+  if (ev.target.id === 'bsair') { const x = lerSessao(); if (x) await sb('/auth/v1/logout', {token: x.a}); sair(); }
+});
+$('lockf').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  const email = $('lem').value.trim().toLowerCase(), pw = $('lpw').value, err = $('err');
+  if (!DOMINIO_OK(email)) { err.textContent = MSG_DOMINIO; return; }
+  $('lbtn').disabled = true; err.className = 'err'; err.textContent = 'Entrando…';
+  const r = await sb('/auth/v1/token?grant_type=password', {body: {email, password: pw}});
+  if (!r.ok) { err.textContent = erroAuth(r); $('lbtn').disabled = false; return; }
+  salvaSessao(r.j, $('rem').checked); $('lpw').value = ''; err.textContent = '';
+  abreApp();
+});
+try { Object.assign(S, JSON.parse(localStorage.getItem('mp-agentes-filtros') || '{}')); } catch (e) { /* */ }
+setInterval(() => { if (!document.hidden && lerSessao() && !$('app').classList.contains('hidden')) carregar(); }, 2 * 60 * 1000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden && lerSessao() && !$('app').classList.contains('hidden')) carregar(); });
+const x0 = lerSessao();
+if (x0 && DOMINIO_OK(x0.e)) abreApp(); else mostraLogin('');
+</script>
+</body>
+</html>
