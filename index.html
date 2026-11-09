@@ -7,6 +7,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src https://cxbgpbibbxfhvdfhyvpx.supabase.co; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>Painel dos Agentes | Meu Patrimônio</title>
 <link rel="icon" href="assets/favicon.png">
+<link rel="stylesheet" href="escritorio.css">
 <style>
 @font-face{font-family:'Campton';src:url(assets/CamptonBook.otf) format('opentype');font-weight:400;font-display:swap}
 @font-face{font-family:'Campton';src:url(assets/CamptonMedium.otf) format('opentype');font-weight:500;font-display:swap}
@@ -95,6 +96,7 @@ svg.chart text{font-family:inherit;fill:#8a929a;font-size:11px}
 .drow em{font-style:normal;color:var(--muted-fg);font-size:12.5px;width:44px;text-align:right}
 .lemb{margin-top:14px;padding:12px 14px;background:var(--muted);border-radius:10px;font-size:13px;line-height:1.5;color:#3d454c}
 
+.sec-tit{font-size:17px;font-weight:600;margin:0 0 12px}
 .vazio{padding:40px 10px;text-align:center;color:var(--muted-fg);font-size:14px}
 .notas{margin-top:18px;font-size:12.5px;color:var(--muted-fg);line-height:1.6;background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:14px 18px}
 .notas b{color:var(--fg);font-weight:500}
@@ -133,6 +135,8 @@ svg.chart text{font-family:inherit;fill:#8a929a;font-size:11px}
     <div class="usr" id="usr"></div>
   </div></header>
   <main>
+    <div id="escritorio"></div>
+    <h2 class="sec-tit">Resultados do Atendente</h2>
     <div class="agente">
       <div class="ag-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.4L3 21l2.1-5.6A8.4 8.4 0 1 1 21 11.5z"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"/></svg></div>
       <div>
@@ -324,6 +328,7 @@ function abreApp() {
   $('lock').classList.add('hidden'); $('app').classList.remove('hidden');
   $('usr').innerHTML = `<span>${ESC(x ? x.e : '')}</span><button type="button" id="bsair">Sair</button>`;
   render(); carregar();
+  if (window.Escritorio) Escritorio.iniciar();
 }
 document.addEventListener('click', async ev => {
   const p = ev.target.closest('#fper button'), o = ev.target.closest('#forg button');
@@ -347,5 +352,6 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden && le
 const x0 = lerSessao();
 if (x0 && DOMINIO_OK(x0.e)) abreApp(); else mostraLogin('');
 </script>
+<script src="escritorio.js"></script>
 </body>
 </html>

@@ -1,0 +1,69 @@
+/* Escritório dos agentes — cena 2D */
+.esc-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh-xs);margin-bottom:22px;overflow:hidden}
+.esc-top{display:flex;align-items:flex-start;gap:12px;padding:16px 18px 10px;flex-wrap:wrap}
+.esc-top h2{margin:0;font-size:17px;font-weight:600}
+.esc-top p{margin:3px 0 0;font-size:13px;color:var(--muted-fg)}
+.esc-resumo{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.esc-resumo span{font-size:12.5px;padding:5px 10px;border-radius:999px;background:var(--muted);color:#3d454c;white-space:nowrap}
+.esc-resumo b{font-weight:600}
+.esc-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.esc-cena{position:relative;min-width:760px}
+.esc-cena svg{display:block;width:100%;height:auto}
+.bolha{position:absolute;transform:translateX(-50%);max-width:21%;background:#fff;border:1px solid var(--border);border-radius:12px;padding:7px 11px;
+  font-size:12.5px;line-height:1.3;color:var(--fg);box-shadow:var(--sh-md);text-align:center;transition:opacity .4s}
+.bolha::after{content:'';position:absolute;left:50%;bottom:-6px;width:10px;height:10px;background:#fff;border-right:1px solid var(--border);
+  border-bottom:1px solid var(--border);transform:translateX(-50%) rotate(45deg)}
+.bolha small{display:block;color:var(--muted-fg);font-size:11px;margin-top:2px}
+.bolha.trab{border-color:#9fdcaa}.bolha.trab::after{border-color:#9fdcaa}
+.bolha.erro{border-color:#f3b4ae;color:#8a1c12}.bolha.erro::after{border-color:#f3b4ae}
+.bolha.dorme{opacity:.85;color:var(--muted-fg)}
+.esc-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--border)}
+.ag{padding:14px 16px;border-left:1px solid var(--border);min-width:0}
+.ag:first-child{border-left:0}
+.ag-h{display:flex;align-items:center;gap:8px}
+.ag-h i{width:10px;height:10px;border-radius:50%;flex:none}
+.ag-h b{font-size:14.5px;font-weight:600}
+.ag-f{font-size:12px;color:var(--muted-fg);margin:3px 0 9px;line-height:1.35;min-height:32px}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;padding:3px 9px;border-radius:999px;margin-bottom:8px}
+.pill::before{content:'';width:7px;height:7px;border-radius:50%;background:currentColor}
+.p-trab{background:#e3f6e6;color:#0b7a1d}.p-trab::before{animation:pisca 1s infinite}
+.p-plantao{background:#e8f0fb;color:#2c5bb8}
+.p-dorme{background:#f0f1f3;color:#69727d}
+.p-erro{background:#fdecea;color:#b42318}.p-erro::before{animation:pisca .7s infinite}
+.p-atraso{background:#fff4e5;color:#9a5b00}
+.p-off{background:#f0f1f3;color:#4b535b}
+.ag-l{font-size:12.5px;color:#3d454c;line-height:1.55}
+.ag-l span{color:var(--muted-fg)}
+@media (max-width:900px){.esc-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.ag:nth-child(3){border-left:0}.ag:nth-child(n+3){border-top:1px solid var(--border)}}
+@media (max-width:520px){.esc-resumo{margin-left:0}}
+
+/* animações da cena */
+@keyframes pisca{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes digita{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes respira{0%,100%{transform:translateY(0)}50%{transform:translateY(1.5px)}}
+@keyframes cabeca{0%,100%{transform:rotate(0)}25%{transform:rotate(-2deg)}75%{transform:rotate(2deg)}}
+@keyframes olho{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@keyframes rola{from{transform:translateY(0)}to{transform:translateY(-24px)}}
+@keyframes zzz{0%{opacity:0;transform:translate(0,0) scale(.7)}30%{opacity:1}100%{opacity:0;transform:translate(14px,-26px) scale(1.15)}}
+@keyframes treme{0%,100%{transform:translateX(0)}20%{transform:translateX(-1.5px)}40%{transform:translateX(1.5px)}60%{transform:translateX(-1px)}80%{transform:translateX(1px)}}
+@keyframes vapor{0%{opacity:0;transform:translateY(0)}40%{opacity:.6}100%{opacity:0;transform:translateY(-10px)}}
+.esc-cena svg *{transform-box:fill-box}
+.robo .corpo{animation:respira 3.2s ease-in-out infinite;transform-origin:center}
+.robo .olhos{animation:olho 4.5s infinite;transform-origin:center}
+.robo .braco-e,.robo .braco-d{transform-origin:center}
+.robo.trab .braco-e{animation:digita .34s ease-in-out infinite}
+.robo.trab .braco-d{animation:digita .34s ease-in-out infinite .17s}
+.robo.trab .cabeca{animation:cabeca 1.6s ease-in-out infinite;transform-origin:50% 100%}
+.robo.trab .antena{animation:pisca .6s infinite}
+.robo.trab .linhas{animation:rola 1.2s linear infinite}
+.robo.erro .corpo{animation:treme .5s infinite}
+.robo.erro .antena{animation:pisca .5s infinite}
+.robo.dorme .corpo{animation:respira 4.5s ease-in-out infinite}
+.robo .z{opacity:0}
+.robo.dorme .z{animation:zzz 2.8s ease-out infinite}
+.robo.dorme .z2{animation-delay:.9s}.robo.dorme .z3{animation-delay:1.8s}
+.robo.atraso .antena{animation:pisca 1.4s infinite}
+.robo.off{filter:grayscale(1);opacity:.7}
+.vapor{animation:vapor 2.6s ease-out infinite}
+.vapor2{animation-delay:1.3s}
+@media (prefers-reduced-motion:reduce){.esc-cena svg *,.pill::before{animation:none!important}}

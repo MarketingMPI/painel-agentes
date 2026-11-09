@@ -11,6 +11,11 @@ Painel para acompanhar os agentes de IA da Meu Patrimônio. Hoje mostra o **Aten
 - A tabela não tem dado pessoal: só o id da conversa no Pipedrive, a origem (LP ou site), o modo (normal, lembrete, abandono), o status e o horário.
 - SQL, carga do histórico e fluxos: pasta `Automações/Bot Requalificação WhatsApp/` (arquivo `supabase/painel_agentes.sql`).
 
+## Escritório dos agentes
+Cena 2D no topo com os 4 agentes (Atendente, Monitor, Validador e Cérebro): trabalhando, de plantão, dormindo (fora do horário), com erro, atrasado ou desligado.
+- Dados: função `public.agentes_status()`, alimentada a cada minuto pelo fluxo do n8n "[AGENTES] Painel - Status dos agentes" (`build_status.py`).
+- Código: `escritorio.js` e `escritorio.css`.
+
 ## Métricas
 Cada conversa entra no período pela data em que começou.
 - **Requalificado:** o bot viu que o lead tem perfil e passou para um consultor.
