@@ -6,7 +6,7 @@ const API = 'https://n8n.meupatrimonio.com/webhook/painel-conversas';
 const TZ = 'America/Sao_Paulo';
 let LISTA = null, ERRO = '', LENDO = false;
 const RES = {requalificado: ['Requalificado', 'var(--c-req)'], desqualificado: ['Fora do perfil', 'var(--c-fora)'],
-  sem_interesse: ['Sem interesse', 'var(--c-sem)'], humano: ['Equipe assumiu', 'var(--c-eq)'], conversando: ['Em andamento', '#7cc58a']};
+  sem_interesse: ['Sem interesse', 'var(--c-sem)'], humano: ['Equipe assumiu', 'var(--c-eq)'], indicacao: ['Indique e Ganhe orientado', '#c9a227'], conversando: ['Em andamento', '#7cc58a']};
 const TIPO = {audio: 'áudio', image: 'imagem', video: 'vídeo', document: 'documento', sticker: 'figurinha', location: 'localização', contacts: 'contato'};
 
 function fone(n) {
@@ -77,7 +77,7 @@ function desenhar() {
         const apelido = l.nome_whatsapp && l.nome_whatsapp.toLowerCase() !== nome.toLowerCase() ? `<small>no WhatsApp: ${ESC(l.nome_whatsapp)}</small>` : '';
         const u = l.ultima;
         return `<tr><td class="ln"><b>${ESC(nome)}</b>${apelido}</td><td class="nw">${ESC(fone(l.telefone))}</td>
-          <td class="nw">${(l.s.origem || 'lp') === 'site' ? 'Botão do site' : 'LP Diagnóstico'}</td>
+          <td class="nw">${(l.s.origem || 'lp') === 'site' ? 'Botão do site' : l.s.origem === 'indique' ? 'Indique e Ganhe' : 'LP Diagnóstico'}</td>
           <td class="nw">${dataHora(l.s.inicio)}</td>
           <td class="nw"><span class="rs" style="--c:${r[1]}">${r[0]}</span>${l.s.abandono ? '<small>parou de responder</small>' : ''}</td>
           <td class="lu">${u ? `<span>${u.dir === 'inbound' ? '<b>Lead:</b> ' : ''}${ESC(u.preview || '[mídia]')}</span><small>${ha(u.em)}</small>` : '–'}</td>

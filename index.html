@@ -154,7 +154,7 @@ svg.chart text{font-family:inherit;fill:#8a929a;font-size:11px}
         <button data-p="hoje">Hoje</button><button data-p="7d">7 dias</button><button data-p="30d">30 dias</button><button data-p="mes">Este mês</button><button data-p="tudo">Tudo</button>
       </div></div>
       <div><span class="flab">Origem</span><div class="seg" id="forg">
-        <button data-o="todas">Todas</button><button data-o="lp">LP do Diagnóstico</button><button data-o="site">Botão do site</button>
+        <button data-o="todas">Todas</button><button data-o="lp">LP do Diagnóstico</button><button data-o="site">Botão do site</button><button data-o="indique">Indique e Ganhe</button>
       </div></div>
       <div class="periodo-txt" id="ptxt"></div>
     </div>
@@ -256,6 +256,7 @@ const RES = [
   ['desqualificado', 'Fora do perfil', 'var(--c-fora)'],
   ['sem_interesse', 'Sem interesse', 'var(--c-sem)'],
   ['humano', 'Passaram para a equipe', 'var(--c-eq)'],
+  ['indicacao', 'Indique e Ganhe orientados', '#c9a227'],
   ['conversando', 'Em andamento', 'var(--c-and)'],
 ];
 function kpi(l, v, s, cor, dest) {
@@ -304,6 +305,7 @@ function render(aviso) {
     kpi('Pararam de responder', nf.format(aband), 'o bot encerrou após 24 h sem resposta') +
     kpi('Sem interesse', nf.format(sem), 'pediram para não continuar', 'var(--c-sem)') +
     kpi('Passaram para a equipe', nf.format(eq), 'alguém do time assumiu antes', 'var(--c-eq)') +
+    (n('indicacao') ? kpi('Indique e Ganhe', nf.format(n('indicacao')), 'tiraram dúvidas do programa de indicação', '#c9a227') : '') +
     '</div>';
   if (!cv.length) {
     h += `<div class="card"><div class="vazio">Nenhuma conversa começou neste período${S.o !== 'todas' ? ' com esta origem' : ''}.</div></div>`;
