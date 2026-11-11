@@ -31,3 +31,5 @@ table.vf{min-width:980px}
 .vf-tudo span{font-weight:500;color:var(--muted-fg);font-size:12.5px}
 .vf-tudo:hover{background:#e3f2e7}
 .vf-tudo.fechar{background:#fff;border-color:var(--border);color:#3d454c;margin-top:12px}
+
+.vf-fim{margin-top:22px}
