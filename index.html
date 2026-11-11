@@ -9,6 +9,7 @@
 <link rel="icon" href="assets/favicon.png">
 <link rel="stylesheet" href="escritorio.css">
 <link rel="stylesheet" href="conversas.css">
+<link rel="stylesheet" href="verificador.css">
 <style>
 @font-face{font-family:'Campton';src:url(assets/CamptonBook.otf) format('opentype');font-weight:400;font-display:swap}
 @font-face{font-family:'Campton';src:url(assets/CamptonMedium.otf) format('opentype');font-weight:500;font-display:swap}
@@ -137,6 +138,7 @@ svg.chart text{font-family:inherit;fill:#8a929a;font-size:11px}
   </div></header>
   <main>
     <div id="escritorio"></div>
+    <div id="verificador"></div>
     <h2 class="sec-tit">Resultados do Atendente</h2>
     <div class="agente">
       <div class="ag-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.4L3 21l2.1-5.6A8.4 8.4 0 1 1 21 11.5z"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"/></svg></div>
@@ -332,6 +334,7 @@ function abreApp() {
   render(); carregar();
   if (window.Escritorio) Escritorio.iniciar();
   if (window.Leads) Leads.iniciar();
+  if (window.Verificador) Verificador.iniciar();
 }
 document.addEventListener('click', async ev => {
   const p = ev.target.closest('#fper button'), o = ev.target.closest('#forg button');
@@ -357,5 +360,6 @@ if (x0 && DOMINIO_OK(x0.e)) abreApp(); else mostraLogin('');
 </script>
 <script src="escritorio.js"></script>
 <script src="conversas.js"></script>
+<script src="verificador.js"></script>
 </body>
 </html>

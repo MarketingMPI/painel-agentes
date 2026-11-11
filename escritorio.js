@@ -10,6 +10,8 @@ const AG = [
    cor: '#8b5cf6', escuro: '#6a3fd0', int: 30, ini: 8 * 60 + 10, fim: 21 * 60, tela: 'check', espera: 'De olho no Monitor'},
   {id: 'cerebro', nome: 'Cérebro', funcao: 'Estuda as conversas e propõe aprendizados para o Atendente.',
    cor: '#e0a43a', escuro: '#b57f1d', int: 15, ini: 8 * 60, fim: 21 * 60 + 30, tela: 'ideia', espera: 'Esperando conversas novas'},
+  {id: 'verificador', nome: 'Verificador', funcao: 'Revisa as conversas paradas há mais de 24 h, confere o Pipedrive e separa por assunto.',
+   cor: '#0f9f9a', escuro: '#0b7a76', int: 30, ini: 7 * 60, fim: 22 * 60, tela: 'lista', espera: 'Esperando a próxima ronda'},
 ];
 const ROT = {trab: 'Trabalhando', plantao: 'De plantão', dorme: 'Dormindo', erro: 'Com erro', atraso: 'Atrasado', off: 'Desligado'};
 const OLHO = {trab: '#7CFFB2', plantao: '#9fd8ff', erro: '#ff6b5e', atraso: '#ffc861', off: '#8a929a', dorme: '#8a929a'};
@@ -69,6 +71,10 @@ function tela(a, k, i) {
     const y = 118 + j * 12;
     c += `<path d="M147 ${y + 3} l3 3 l5 -6" stroke="#c4b0ff" stroke-width="2" fill="none" stroke-linecap="round"/><rect x="159" y="${y}" width="${36 - (j % 3) * 7}" height="5" rx="2.5" fill="#e3dcff"/>`;
   }
+  if (a.tela === 'lista') for (let j = 0; j < 6; j++) {
+    const y = 117 + j * 12, cor = ['#ff8a7a', '#ffd166', '#7ce0c3'][j % 3];
+    c += `<circle cx="150" cy="${y + 3}" r="3" fill="${cor}"/><rect x="157" y="${y}" width="${40 - (j % 2) * 10}" height="6" rx="3" fill="#cdeeed"/>`;
+  }
   if (a.tela === 'ideia') for (let j = 0; j < 2; j++) {
     const o = j * 24;
     c += `<circle cx="173" cy="${130 + o}" r="9" fill="#ffd66b"/><rect x="169" y="${139 + o}" width="8" height="4" rx="1" fill="#e0a43a"/>` +
@@ -86,6 +92,7 @@ function robo(a, k, i, cx) {
   const acess = a.id === 'atendente' ? `<path d="M80 112 q0 -30 30 -30 q30 0 30 30" stroke="#24302b" stroke-width="3.5" fill="none"/><rect x="76" y="106" width="8" height="15" rx="4" fill="#24302b"/><rect x="136" y="106" width="8" height="15" rx="4" fill="#24302b"/><path d="M80 120 q4 12 18 12" stroke="#24302b" stroke-width="2.5" fill="none"/><circle cx="99" cy="132" r="2.6" fill="#24302b"/>`
     : a.id === 'monitor' ? `<circle cx="134" cy="96" r="7" fill="none" stroke="#24302b" stroke-width="2.5"/><path d="M139 101 l5 5" stroke="#24302b" stroke-width="3" stroke-linecap="round"/>`
     : a.id === 'validador' ? `<rect x="134" y="152" width="16" height="20" rx="2" fill="#f4f1ff" stroke="#24302b" stroke-width="1.5"/><path d="M138 160 h8 M138 165 h6" stroke="#8b5cf6" stroke-width="1.6"/>`
+    : a.id === 'verificador' ? `<circle cx="101" cy="114" r="8" fill="none" stroke="#e8ecef" stroke-width="2.2"/><circle cx="119" cy="114" r="8" fill="none" stroke="#e8ecef" stroke-width="2.2"/><path d="M109 114 h2" stroke="#e8ecef" stroke-width="2.2"/>`
     : `<path d="M98 92 q-6 -10 4 -12 q2 -8 10 -4 q8 -4 10 4 q10 2 4 12" fill="#ffd66b" stroke="#b57f1d" stroke-width="1.5"/>`;
   return `<g transform="translate(${cx - 110},0)"><g class="robo ${k}">
     <ellipse cx="110" cy="292" rx="96" ry="9" fill="#000" opacity=".07"/>
@@ -97,7 +104,7 @@ function robo(a, k, i, cx) {
         <rect x="82" y="92" width="56" height="46" rx="16" fill="${a.cor}"/>
         <rect x="88" y="100" width="44" height="30" rx="10" fill="#0f1a17"/>
         ${olhos}${boca}
-        ${a.id === 'atendente' || a.id === 'cerebro' ? acess : ''}
+        ${a.id === 'atendente' || a.id === 'cerebro' || a.id === 'verificador' ? acess : ''}
       </g>
       <rect x="86" y="140" width="48" height="50" rx="13" fill="${a.escuro}"/>
       <circle cx="110" cy="158" r="7" fill="#fff" opacity=".9"/><circle cx="110" cy="158" r="3.5" fill="${a.cor}"/>
@@ -128,25 +135,25 @@ function cena(estados) {
     : '<rect x="432" y="32" width="136" height="86" fill="#1c2b4a"/><circle cx="540" cy="58" r="10" fill="#f3f0d8"/><circle cx="545" cy="54" r="9" fill="#1c2b4a"/><circle cx="460" cy="50" r="1.4" fill="#fff"/><circle cx="485" cy="70" r="1.2" fill="#fff"/><circle cx="510" cy="45" r="1.5" fill="#fff"/><circle cx="470" cy="92" r="1.1" fill="#fff"/>';
   // clipPath em coordenadas locais do robô (o grupo é transladado)
   const clipsLocais = AG.map((a, i) => `<clipPath id="tl${i}"><rect x="140" y="110" width="66" height="50" rx="5"/></clipPath>`).join('');
-  return `<svg viewBox="0 -22 1000 322" role="img" aria-label="Escritório dos agentes">
+  return `<svg viewBox="0 -22 1250 322" role="img" aria-label="Escritório dos agentes">
     <defs>${clipsLocais}</defs>
-    <rect y="-22" width="1000" height="237" fill="#eef3f0"/>
-    <rect y="207" width="1000" height="8" fill="#d6dfd9"/>
-    <rect y="215" width="1000" height="85" fill="#e2e8e3"/>
-    ${[0, 1, 2, 3, 4, 5, 6, 7, 8].map(j => `<line x1="${j * 125}" y1="215" x2="${j * 125 - 30}" y2="300" stroke="#d4dcd6" stroke-width="1.5"/>`).join('')}
+    <rect y="-22" width="1250" height="237" fill="#eef3f0"/>
+    <rect y="207" width="1250" height="8" fill="#d6dfd9"/>
+    <rect y="215" width="1250" height="85" fill="#e2e8e3"/>
+    ${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(j => `<line x1="${j * 125}" y1="215" x2="${j * 125 - 30}" y2="300" stroke="#d4dcd6" stroke-width="1.5"/>`).join('')}
     <rect x="426" y="26" width="148" height="98" rx="4" fill="#fff" stroke="#cfd8d2" stroke-width="2"/>${ceu}
     <line x1="500" y1="32" x2="500" y2="118" stroke="#fff" stroke-width="4"/><line x1="432" y1="75" x2="568" y2="75" stroke="#fff" stroke-width="4"/>
     <circle cx="250" cy="62" r="30" fill="#fff" stroke="#cfd8d2" stroke-width="3"/>
     <text id="esc-relogio" x="250" y="68" text-anchor="middle" font-size="16" font-weight="600" fill="#1c1c1c">${hhmm()}</text>
     <text x="250" y="108" text-anchor="middle" font-size="10" fill="#8a929a">Brasília</text>
-    <rect x="736" y="28" width="76" height="92" rx="6" fill="#00503c"/>
-    <image href="assets/coruja-branca.png" x="750" y="38" width="48" height="48"/>
-    <text x="774" y="104" text-anchor="middle" font-size="9.5" font-weight="600" fill="#fff">MEU</text>
-    <text x="774" y="115" text-anchor="middle" font-size="9.5" font-weight="600" fill="#fff">PATRIMÔNIO</text>
-    <g transform="translate(985,0)"><rect x="-8" y="176" width="20" height="30" rx="3" fill="#c9805a"/><path d="M2 176 q-14 -20 -6 -40 q6 14 6 40 q2 -26 12 -38 q4 22 -12 38" fill="#4f9d5d"/></g>
+    <rect x="982" y="28" width="76" height="92" rx="6" fill="#00503c"/>
+    <image href="assets/coruja-branca.png" x="996" y="38" width="48" height="48"/>
+    <text x="1020" y="104" text-anchor="middle" font-size="9.5" font-weight="600" fill="#fff">MEU</text>
+    <text x="1020" y="115" text-anchor="middle" font-size="9.5" font-weight="600" fill="#fff">PATRIMÔNIO</text>
+    <g transform="translate(1235,0)"><rect x="-8" y="176" width="20" height="30" rx="3" fill="#c9805a"/><path d="M2 176 q-14 -20 -6 -40 q6 14 6 40 q2 -26 12 -38 q4 22 -12 38" fill="#4f9d5d"/></g>
     <g transform="translate(15,0)"><rect x="-8" y="176" width="20" height="30" rx="3" fill="#c9805a"/><path d="M2 176 q-14 -20 -6 -40 q6 14 6 40 q2 -26 12 -38 q4 22 -12 38" fill="#4f9d5d"/></g>
     ${AG.map((a, i) => robo(a, estados[i].k, i, i * 250 + 125)).join('')}
-    ${todosDormem && !dia ? '<rect y="-22" width="1000" height="322" fill="#0b1630" opacity=".28"/>' : ''}
+    ${todosDormem && !dia ? '<rect y="-22" width="1250" height="322" fill="#0b1630" opacity=".28"/>' : ''}
   </svg>`;
 }
 
@@ -169,7 +176,7 @@ function montar() {
   cenaEl.querySelectorAll('.bolha').forEach(b => b.remove());
   est.forEach((e, i) => {
     const b = document.createElement('div');
-    b.className = 'bolha ' + e.k; b.style.left = ((i * 250 + 125) / 10) + '%'; b.style.bottom = (100 - (64 + 22) / 322 * 100) + '%';
+    b.className = 'bolha ' + e.k; b.style.left = ((i * 250 + 125) / 12.5) + '%'; b.style.bottom = (100 - (64 + 22) / 322 * 100) + '%';
     b.innerHTML = ESC(e.b) + (e.s ? `<small>${ESC(e.s)}</small>` : '');
     cenaEl.appendChild(b);
   });

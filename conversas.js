@@ -90,11 +90,12 @@ function desenhar() {
 }
 
 /* ---------------- prévia da conversa ---------------- */
-async function abrir(id) {
-  const l = (LISTA || []).find(x => x.conversa_id === id) || {};
+async function abrir(id, info) {
+  // info (opcional) vem de outras listas do painel, ex.: Verificador {nome_whatsapp, telefone, deal_id, rotulo:[texto, cor]}
+  const l = (LISTA || []).find(x => x.conversa_id === id) || info || {};
   const s = linhas().find(x => x.conversa_id === id);
   const nome = l.nome_cadastro || l.nome_whatsapp || 'Lead';
-  const r = RES[(s && s.s.status) || 'conversando'];
+  const r = (info && info.rotulo) || RES[(s && s.s.status) || 'conversando'];
   let dlg = document.getElementById('cvd');
   if (!dlg) { dlg = document.createElement('dialog'); dlg.id = 'cvd'; document.body.appendChild(dlg);
     dlg.addEventListener('click', ev => { if (ev.target === dlg || ev.target.closest('[data-fechar]')) dlg.close(); }); }
@@ -130,6 +131,7 @@ if (typeof render === 'function') {
   render = function () { const r = original.apply(this, arguments); desenhar(); return r; };   // eslint-disable-line no-func-assign
 }
 window.Leads = {
+  abrir,
   iniciar() { carregarLista(); clearInterval(window.__leadsT); window.__leadsT = setInterval(() => { if (!document.hidden) carregarLista(); }, 2 * 60 * 1000); },
   _teste(lista, msgs) { LISTA = lista; desenhar(); if (msgs) window.__msgsTeste = msgs; },
 };

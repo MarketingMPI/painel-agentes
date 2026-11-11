@@ -12,9 +12,14 @@ Painel para acompanhar os agentes de IA da Meu Patrimônio. Hoje mostra o **Aten
 - SQL, carga do histórico e fluxos: pasta `Automações/Bot Requalificação WhatsApp/` (arquivo `supabase/painel_agentes.sql`).
 
 ## Escritório dos agentes
-Cena 2D no topo com os 4 agentes (Atendente, Monitor, Validador e Cérebro): trabalhando, de plantão, dormindo (fora do horário), com erro, atrasado ou desligado.
+Cena 2D no topo com os 5 agentes (Atendente, Monitor, Validador, Cérebro e Verificador): trabalhando, de plantão, dormindo (fora do horário), com erro, atrasado ou desligado.
 - Dados: função `public.agentes_status()`, alimentada a cada minuto pelo fluxo do n8n "[AGENTES] Painel - Status dos agentes" (`build_status.py`).
 - Código: `escritorio.js` e `escritorio.css`.
+
+## Verificador · conversas paradas
+Todas as conversas do WhatsApp sem resposta há mais de 24 h, separadas por categoria (lead esperando resposta, lead sumiu, cliente/operacional, parceiro/interno, encerrada, spam), com quem parou, a situação no Pipedrive (funil, etapa, dono) e o resumo do contexto.
+- Dados: função `public.verificador_painel()`, alimentada a cada 30 min (7h-22h) pelo fluxo "[AGENTES] WhatsApp - Verificador (conversas paradas)" (`build_verificador.py`). O Verificador só lê e separa.
+- Código: `verificador.js` e `verificador.css`.
 
 ## Leads atendidos pelo bot
 Lista com nome e WhatsApp de quem conversou com o Atendente (mesmos filtros de período e origem) e botão "Ver conversa" com as mensagens, só leitura.
