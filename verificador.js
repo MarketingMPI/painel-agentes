@@ -16,7 +16,7 @@ const TIPO = {lead: 'Leads', cliente_aluno: 'Clientes e alunos', parceiro_intern
 const NAO_CONSULTOR = ['Ninguém', 'Marketing', 'Atendente (bot)', 'celular', 'equipe', '', null, undefined];
 const SIT = {negocio_aberto: 'Negócio aberto', sem_negocio_aberto: 'Só negócio fechado', pessoa_sem_negocio: 'Cadastrado sem negócio', fora_do_pipedrive: 'Fora do Pipedrive'};
 const ST = {open: 'aberto', won: 'ganho', lost: 'perdido', excluido: 'excluído'};
-let D = null, ERRO = '', F = {cat: 'todas', tipo: 'lead'};
+let D = null, ERRO = '', F = {cat: 'todas', tipo: 'lead', aberto: false};   // começa fechado: só os grandes números
 
 function fone(n) {
   n = String(n || '').replace(/\D/g, '');
@@ -74,6 +74,7 @@ function desenhar() {
       <div><b>${comConsultor}</b><span>leads já com um consultor</span></div>
       <div><b>${foraPd}</b><span>leads sem negócio no Pipedrive</span></div>
     </div>
+    ${!F.aberto ? `<div class="vf-ver"><button class="vf-tudo" data-vabrir="1">Ver tudo <span>${todas.length} conversas</span></button></div>` : `
     <div class="vf-fil">
       <div class="seg">${[['lead', TIPO.lead], ['cliente_aluno', TIPO.cliente_aluno], ['parceiro_interno', TIPO.parceiro_interno], ['spam', TIPO.spam], ['todos', 'Todos']]
         .map(([k, v]) => `<button data-vtipo="${k}" class="${F.tipo === k ? 'on' : ''}">${v} (${k === 'todos' ? todas.length : todas.filter(c => (c.tipo || 'lead') === k).length})</button>`).join('')}</div>
@@ -93,7 +94,8 @@ function desenhar() {
           <td class="vf-pd">${pipedrive(c.pipedrive)}</td>
           <td class="vf-ctx"><b>${ESC(c.assunto || '')}</b><span>${ESC(c.resumo || '')}</span>${c.perfil_citado ? `<small>Perfil citado: ${ESC(c.perfil_citado)}</small>` : ''}${(c.resumo || '').length > 170 ? '<small class="vf-mais">ver resumo completo</small>' : ''}</td>
           <td><button class="vb" data-vconv="${ESC(c.conversa_id)}" data-vneg="${neg ? ESC(neg.id) : ''}">Ver conversa</button></td></tr>`;
-      }).join('')}</tbody></table></div>`}`;
+      }).join('')}</tbody></table></div>`}
+    <div class="vf-ver"><button class="vf-tudo fechar" data-vabrir="0">Recolher</button></div>`}`;
   box.innerHTML = `<div class="card vfcard"><div class="lhead"><div><h3>Verificador · conversas paradas</h3>
     <div class="c-s">Conversas do WhatsApp sem movimento há mais de 24 h. A situação vem de quem falou por último; a IA resume o contexto. Não depende dos filtros de cima.</div></div>
     ${D && D.gerado ? `<span class="lct">atualizado ${dataHora(D.gerado)}</span>` : ''}</div>${corpo}</div>`;
@@ -103,6 +105,9 @@ document.addEventListener('click', ev => {
   const c = ev.target.closest('[data-vcat]'), q = ev.target.closest('[data-vtipo]'), v = ev.target.closest('[data-vconv]');
   const ctx = ev.target.closest('.vf-ctx');
   if (ctx) { ctx.classList.toggle('aberto'); const m = ctx.querySelector('.vf-mais'); if (m) m.textContent = ctx.classList.contains('aberto') ? 'mostrar menos' : 'ver resumo completo'; }
+  const ab = ev.target.closest('[data-vabrir]');
+  if (ab) { F.aberto = ab.dataset.vabrir === '1'; desenhar();
+    if (!F.aberto) { const el = document.getElementById('verificador'); if (el) el.scrollIntoView({block: 'nearest'}); } }
   if (c) { F.cat = c.dataset.vcat; desenhar(); }
   if (q) { F.tipo = q.dataset.vtipo; F.cat = 'todas'; desenhar(); }
   if (v && window.Leads) {

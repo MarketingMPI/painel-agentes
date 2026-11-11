@@ -25,3 +25,9 @@ table.vf{min-width:980px}
 
 .vf .vf-rs{white-space:normal;max-width:190px}
 .vf td small{display:block}
+
+.vf-ver{display:flex;justify-content:center;margin:2px 0 2px}
+.vf-tudo{display:inline-flex;align-items:center;gap:8px;border:1px solid #bfe0c7;background:#f1f8f3;color:var(--verde);border-radius:999px;padding:8px 18px;font-size:13.5px;font-weight:600;cursor:pointer}
+.vf-tudo span{font-weight:500;color:var(--muted-fg);font-size:12.5px}
+.vf-tudo:hover{background:#e3f2e7}
+.vf-tudo.fechar{background:#fff;border-color:var(--border);color:#3d454c;margin-top:12px}
