@@ -1,0 +1,9 @@
+/* Agente MP PRO (usa a base visual do Verificador: .vf-kpis, .vf, .vf-tudo) */
+.mpcard{margin:22px 0 12px}
+.mp-kpis{grid-template-columns:repeat(5,minmax(0,1fr))}
+.mp-kpis .mp-ouro{background:#f7f1de}.mp-kpis .mp-ouro b{color:#8a6d1d}
+.mp-tag{display:inline-block;background:#12100c;color:#e4d6a7;font-size:11px;font-weight:700;letter-spacing:.08em;padding:3px 8px;border-radius:999px;margin-right:6px;vertical-align:2px}
+table.mp{min-width:900px}
+@media (max-width:900px){.mp-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:560px){.mp-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.mp .ln small{white-space:nowrap}

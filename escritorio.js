@@ -12,12 +12,15 @@ const AG = [
    cor: '#8b5cf6', escuro: '#6a3fd0', int: 30, ini: 8 * 60 + 10, fim: 21 * 60, tela: 'check', espera: 'De olho no Monitor'},
   {id: 'verificador', nome: 'Verificador', funcao: 'Revisa as conversas paradas há mais de 24 h, confere o Pipedrive e separa por assunto.',
    cor: '#0f9f9a', escuro: '#0b7a76', int: 30, ini: 7 * 60, fim: 22 * 60, tela: 'lista', espera: 'Esperando a próxima ronda'},
+  {id: 'mppro', nome: 'MP PRO', funcao: 'Atende quem fala do MP PRO no WhatsApp: tira dúvidas, manda o link e passa aluno com problema para a equipe.',
+   cor: '#d9c795', escuro: '#3a3229', int: 1, ini: 8 * 60, fim: 20 * 60 - 1, tela: 'pro', espera: 'Esperando mensagem sobre o MP PRO'},
 ];
 const ROT = {trab: 'Trabalhando', plantao: 'De plantão', dorme: 'Dormindo', erro: 'Com erro', atraso: 'Atrasado', off: 'Desligado'};
 const OLHO = {trab: '#7CFFB2', plantao: '#9fd8ff', erro: '#ff6b5e', atraso: '#ffc861', off: '#8a929a', dorme: '#8a929a'};
 const TZ = 'America/Sao_Paulo';
 const W = 1250, Y0 = -22, H = 642, ANDAR = 320;          // cena com dois andares
-const POS = AG.map((a, i) => i === 0 ? {x: 625, y: 0} : {x: (i - 1) * (W / 4) + W / 8, y: ANDAR});
+const NB = AG.length - 1;   // agentes do andar de baixo
+const POS = AG.map((a, i) => i === 0 ? {x: 625, y: 0} : {x: (i - 1) * (W / NB) + W / NB / 2, y: ANDAR});
 let ST = null, ASSIN = '', TIMER = null, TICK = null, LENDO = false;
 
 const t = iso => iso ? new Date(iso).getTime() : 0;
@@ -77,6 +80,10 @@ function tela(a, k, i) {
     const y = 117 + j * 12, cor = ['#ff8a7a', '#ffd166', '#7ce0c3'][j % 3];
     c += `<circle cx="150" cy="${y + 3}" r="3" fill="${cor}"/><rect x="157" y="${y}" width="${40 - (j % 2) * 10}" height="6" rx="3" fill="#cdeeed"/>`;
   }
+  if (a.tela === 'pro') for (let j = 0; j < 6; j++) {
+    const esq = j % 2 === 0, y = 116 + j * 12;
+    c += `<rect x="${esq ? 146 : 166}" y="${y}" width="${esq ? 30 : 34}" height="8" rx="4" fill="${esq ? '#e8ecef' : '#e4d6a7'}"/>`;
+  }
   if (a.tela === 'ideia') for (let j = 0; j < 2; j++) {
     const o = j * 24;
     c += `<circle cx="173" cy="${130 + o}" r="9" fill="#ffd66b"/><rect x="169" y="${139 + o}" width="8" height="4" rx="1" fill="#e0a43a"/>` +
@@ -109,7 +116,8 @@ function robo(a, k, i, cx, oy) {
         ${a.id === 'atendente' || a.id === 'cerebro' || a.id === 'verificador' ? acess : ''}
       </g>
       <rect x="86" y="140" width="48" height="50" rx="13" fill="${a.escuro}"/>
-      <circle cx="110" cy="158" r="7" fill="#fff" opacity=".9"/><circle cx="110" cy="158" r="3.5" fill="${a.cor}"/>
+      ${a.id === 'mppro' ? '<rect x="94" y="151" width="32" height="14" rx="7" fill="#12100c"/><text x="110" y="161.5" text-anchor="middle" font-size="8.5" font-weight="700" letter-spacing=".06em" fill="#e4d6a7">PRO</text>'
+        : `<circle cx="110" cy="158" r="7" fill="#fff" opacity=".9"/><circle cx="110" cy="158" r="3.5" fill="${a.cor}"/>`}
       ${a.id === 'monitor' ? acess : ''}
       <rect class="braco-e" x="73" y="148" width="13" height="38" rx="6.5" fill="${a.cor}"/>
       <rect class="braco-d" x="134" y="148" width="13" height="38" rx="6.5" fill="${a.cor}"/>
@@ -141,7 +149,7 @@ function cena(estados) {
   // ligações: tudo sai do Cérebro e chega em cada agente do andar de baixo
   const cerebroTrab = estados[0].k === 'trab';
   const fios = AG.slice(1).map((a, n) => {
-    const p = POS[n + 1], x0 = 625 + (n - 1.5) * 34;
+    const p = POS[n + 1], x0 = 625 + (n - (NB - 1) / 2) * 28;
     return `<path d="M${x0} 296 C ${x0} 330, ${p.x} 318, ${p.x} ${ANDAR + 62}" fill="none" stroke="${a.cor}" stroke-width="3" opacity=".55" stroke-linecap="round"/>` +
       `<path class="fluxo${cerebroTrab ? ' rapido' : ''}" d="M${x0} 296 C ${x0} 330, ${p.x} 318, ${p.x} ${ANDAR + 62}" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="4 14" stroke-linecap="round" opacity=".9"/>` +
       `<circle cx="${p.x}" cy="${ANDAR + 62}" r="5" fill="${a.cor}"/>`;

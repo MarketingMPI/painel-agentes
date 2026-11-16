@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="escritorio.css">
 <link rel="stylesheet" href="conversas.css">
 <link rel="stylesheet" href="verificador.css">
+<link rel="stylesheet" href="mppro.css">
 <style>
 @font-face{font-family:'Campton';src:url(assets/CamptonBook.otf) format('opentype');font-weight:400;font-display:swap}
 @font-face{font-family:'Campton';src:url(assets/CamptonMedium.otf) format('opentype');font-weight:500;font-display:swap}
@@ -169,6 +170,7 @@ svg.chart text{font-family:inherit;fill:#8a929a;font-size:11px}
       <b>Taxa de requalificação</b> = requalificados ÷ (requalificados + fora do perfil).
       <b>Passaram para a equipe</b> = alguém do time assumiu a conversa antes do bot decidir.
     </div>
+    <div id="mppro"></div>
     <div id="verificador" class="vf-fim"></div>
     <div class="rodape"><span id="atual"></span><span>Atualiza sozinho a cada 2 minutos</span></div>
   </main>
@@ -337,6 +339,7 @@ function abreApp() {
   if (window.Escritorio) Escritorio.iniciar();
   if (window.Leads) Leads.iniciar();
   if (window.Verificador) Verificador.iniciar();
+  if (window.MpPro) MpPro.iniciar();
 }
 document.addEventListener('click', async ev => {
   const p = ev.target.closest('#fper button'), o = ev.target.closest('#forg button');
@@ -363,5 +366,6 @@ if (x0 && DOMINIO_OK(x0.e)) abreApp(); else mostraLogin('');
 <script src="escritorio.js"></script>
 <script src="conversas.js"></script>
 <script src="verificador.js"></script>
+<script src="mppro.js"></script>
 </body>
 </html>

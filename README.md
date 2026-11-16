@@ -16,6 +16,10 @@ Cena 2D no topo com os 5 agentes (Atendente, Monitor, Validador, Cérebro e Veri
 - Dados: função `public.agentes_status()`, alimentada a cada minuto pelo fluxo do n8n "[AGENTES] Painel - Status dos agentes" (`build_status.py`).
 - Código: `escritorio.js` e `escritorio.css`.
 
+## Agente MP PRO · conversas sobre o MP PRO
+
+Seção `#mppro` (`mppro.js` e `mppro.css`), logo antes do Verificador. Lê a RPC `mppro_painel()` (Supabase MP GLOBAL, tabela `mppro_turnos`, gravada pelo fluxo n8n "[AGENTES] WhatsApp - MP PRO (atendimento)"). Começa fechada, só com os números (conversas, profissionais que receberam o link, alunos passados à equipe, investidores levados ao Diagnóstico, em andamento); "Ver tudo" abre a lista com perfil, resultado, resumo e "Ver conversa". No escritório, o MP PRO é o 6º robô (champagne, com "PRO" no peito).
+
 ## Verificador · conversas paradas
 Todas as conversas do WhatsApp sem resposta há mais de 24 h, separadas por categoria (lead esperando resposta, lead sumiu, cliente/operacional, parceiro/interno, encerrada, spam), com quem parou, a situação no Pipedrive (funil, etapa, dono) e o resumo do contexto.
 - Dados: função `public.verificador_painel()`, alimentada a cada 30 min (7h-22h) pelo fluxo "[AGENTES] WhatsApp - Verificador (conversas paradas)" (`build_verificador.py`). O Verificador só lê e separa.
