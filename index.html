@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src https://cxbgpbibbxfhvdfhyvpx.supabase.co https://n8n.meupatrimonio.com; object-src 'none'; base-uri 'none'; form-action 'none'">
-<title>Painel dos Agentes | Meu Patrimônio</title>
+<title>Painel Patrícia | Meu Patrimônio</title>
 <link rel="icon" href="assets/favicon.png">
 <link rel="stylesheet" href="escritorio.css">
 <link rel="stylesheet" href="conversas.css">
@@ -18,7 +18,7 @@
 :root{
   --verde:#00503c;--verde-prof:#003326;--lima:#00a611;--lima-cl:#61ce70;
   --fg:#1c1c1c;--muted:#f4f5f4;--muted-fg:#69727d;--border:#e4e7e5;--card:#fff;
-  --c-req:#00a611;--c-fora:#9aa3ab;--c-sem:#e0a43a;--c-eq:#3b6fd8;--c-and:#c9ead0;
+  --c-req:#00a611;--c-fora:#9aa3ab;--c-sem:#e0a43a;--c-eq:#3b6fd8;--c-and:#c9ead0;--c-ind:#7a5cc4;
   --sh-xs:0 1px 2px rgba(16,24,20,.05);--sh-md:0 4px 14px rgba(16,24,20,.07);--r:12px
 }
 *{box-sizing:border-box}
@@ -53,6 +53,14 @@ header{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid v
 .usr button{border:1px solid var(--border);background:#fff;border-radius:8px;padding:6px 11px;font-size:13px;color:var(--fg)}
 main{max-width:1180px;margin:0 auto;padding:22px 20px 40px}
 
+/* avatar da Patrícia no topo */
+.pav{width:34px;height:34px;border-radius:50%;background:linear-gradient(145deg,var(--verde),var(--verde-prof));
+  display:grid;place-items:center;flex:none;position:relative;box-shadow:0 2px 6px rgba(0,80,60,.25)}
+.pav svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.pav b{position:absolute;right:-1px;bottom:-1px;width:11px;height:11px;border-radius:50%;
+  background:var(--lima);border:2px solid #fff}
+.hsep{width:1px;height:26px;background:var(--border);margin:0 2px}
+
 /* ---------- agente ---------- */
 .agente{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh-xs);margin-bottom:18px}
 .ag-ic{width:42px;height:42px;border-radius:10px;background:#e8f6ea;display:grid;place-items:center;flex:none}
@@ -71,7 +79,7 @@ main{max-width:1180px;margin:0 auto;padding:22px 20px 40px}
 .periodo-txt{font-size:12.5px;color:var(--muted-fg)}
 
 /* ---------- cartões ---------- */
-.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:12px}
 .kpi{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:15px 16px;box-shadow:var(--sh-xs);min-width:0}
 .kpi .k-l{font-size:13px;color:var(--muted-fg);display:flex;align-items:center;gap:7px}
 .kpi .k-l i{width:9px;height:9px;border-radius:3px;display:block;flex:none}
@@ -79,6 +87,13 @@ main{max-width:1180px;margin:0 auto;padding:22px 20px 40px}
 .kpi .k-s{font-size:12px;color:var(--muted-fg);margin-top:7px;line-height:1.35}
 .kpi.dest{background:linear-gradient(150deg,var(--verde),var(--verde-prof));border:0;color:#fff}
 .kpi.dest .k-l,.kpi.dest .k-s{color:rgba(255,255,255,.78)}
+.kpi.dest .k-v{font-size:38px}
+
+/* segunda fileira: números de apoio, menores e sem disputar atenção */
+.kpis-sec{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px;margin-bottom:18px}
+.kpis-sec .kpi{padding:13px 15px;background:#fcfdfc}
+.kpis-sec .kpi .k-v{font-size:22px;margin-top:4px}
+.kpis-sec .kpi .k-s{margin-top:5px;font-size:11.5px}
 
 .grid2{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:12px}
 .card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:18px;box-shadow:var(--sh-xs);min-width:0}
@@ -119,7 +134,7 @@ svg.chart text{font-family:inherit;fill:#8a929a;font-size:11px}
 <div id="lock">
   <form class="lbox" id="lockf" autocomplete="on">
     <img src="assets/favicon.png" alt="">
-    <h1>Painel dos Agentes</h1>
+    <h1>Painel Patrícia</h1>
     <p class="sub">Acesso exclusivo para e-mails @meupatrimonio.com. Use a mesma conta do Painel Operacional.</p>
     <input type="email" id="lem" placeholder="seu.nome@meupatrimonio.com" autocomplete="username" required>
     <input type="password" id="lpw" placeholder="Senha" autocomplete="current-password" required>
@@ -134,17 +149,22 @@ svg.chart text{font-family:inherit;fill:#8a929a;font-size:11px}
 <div id="app" class="hidden">
   <header><div class="hin">
     <img src="assets/favicon.png" alt="">
-    <div class="htit">Painel dos Agentes<small>Meu Patrimônio · agentes de IA</small></div>
+    <div class="hsep"></div>
+    <div class="pav" title="Patrícia">
+      <svg viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.4L3 21l2.1-5.6A8.4 8.4 0 1 1 21 11.5z"/></svg>
+      <b></b>
+    </div>
+    <div class="htit">Painel Patrícia<small>Meu Patrimônio · atendimento no WhatsApp</small></div>
     <div class="usr" id="usr"></div>
   </div></header>
   <main>
     <div id="escritorio"></div>
-    <h2 class="sec-tit">Resultados da Patrícia</h2>
+    <h2 class="sec-tit">Desempenho</h2>
     <div class="agente">
       <div class="ag-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.4L3 21l2.1-5.6A8.4 8.4 0 1 1 21 11.5z"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"/></svg></div>
       <div>
-        <div class="ag-t">Patrícia · requalificação no WhatsApp</div>
-        <div class="ag-s">Conversa com os leads que ficaram fora do perfil no formulário (LP do Diagnóstico) com quem chega pelo botão do site e com quem quer saber do Indique e Ganhe.</div>
+        <div class="ag-t">O que a Patrícia faz</div>
+        <div class="ag-s">Conversa com os leads que ficaram fora do perfil no formulário do Diagnóstico, com quem chega pelo botão do site e com quem quer saber do Indique e Ganhe.</div>
       </div>
       <div class="ag-on" id="agon"><i></i> No ar</div>
     </div>
@@ -258,7 +278,7 @@ const RES = [
   ['desqualificado', 'Fora do perfil', 'var(--c-fora)'],
   ['sem_interesse', 'Sem interesse', 'var(--c-sem)'],
   ['humano', 'Passaram para a equipe', 'var(--c-eq)'],
-  ['indicacao', 'Indique e Ganhe orientados', '#c9a227'],
+  ['indicacao', 'Indique e Ganhe orientados', 'var(--c-ind)'],
   ['conversando', 'Em andamento', 'var(--c-and)'],
 ];
 function kpi(l, v, s, cor, dest) {
@@ -299,15 +319,17 @@ function render(aviso) {
   const decididas = req + fora;
   let h = aviso ? `<div class="aviso">${ESC(aviso)}</div>` : '';
   h += '<div class="kpis">' +
-    kpi('Conversas', nf.format(cv.length), 'iniciadas no período') +
     kpi('Taxa de requalificação', pct(req, decididas), decididas ? `${req} de ${decididas} conversas decididas` : 'nenhuma conversa decidida ainda', null, true) +
+    kpi('Conversas', nf.format(cv.length), 'iniciadas no período') +
     kpi('Requalificados', nf.format(req), 'passaram para um consultor', 'var(--c-req)') +
     kpi('Fora do perfil', nf.format(fora), 'foram para a Base de Relacionamento', 'var(--c-fora)') +
-    kpi('Em andamento', nf.format(and), 'o bot ainda está conversando', 'var(--c-and)') +
-    kpi('Pararam de responder', nf.format(aband), 'o bot encerrou após 24 h sem resposta') +
+    '</div>' +
+    '<div class="kpis-sec">' +
+    kpi('Em andamento', nf.format(and), 'a Patrícia ainda está conversando', 'var(--c-and)') +
+    kpi('Pararam de responder', nf.format(aband), 'encerradas após 24 h sem resposta') +
     kpi('Sem interesse', nf.format(sem), 'pediram para não continuar', 'var(--c-sem)') +
     kpi('Passaram para a equipe', nf.format(eq), 'alguém do time assumiu antes', 'var(--c-eq)') +
-    (n('indicacao') ? kpi('Indique e Ganhe', nf.format(n('indicacao')), 'tiraram dúvidas do programa de indicação', '#c9a227') : '') +
+    (n('indicacao') ? kpi('Indique e Ganhe', nf.format(n('indicacao')), 'tiraram dúvidas do programa', 'var(--c-ind)') : '') +
     '</div>';
   if (!cv.length) {
     h += `<div class="card"><div class="vazio">Nenhuma conversa começou neste período${S.o !== 'todas' ? ' com esta origem' : ''}.</div></div>`;

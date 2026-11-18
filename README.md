@@ -38,3 +38,8 @@ Cada conversa entra no período pela data em que começou.
 - **Pararam de responder:** o lead ficou mais de 24 h sem responder e o bot encerrou sozinho. Já está somado em requalificados ou fora do perfil.
 - **Taxa de requalificação:** requalificados ÷ (requalificados + fora do perfil).
 - **Passaram para a equipe:** alguém do time assumiu a conversa antes de o bot decidir.
+
+## Pré-visualizar sem login
+`python _preview.py` gera `_preview.html` (fora do git): o painel real com a sessão e as RPCs
+simuladas por um stub de `window.fetch`, para abrir em `file://` e conferir o visual sem precisar
+da conta Supabase. Nenhum dado real sai daqui.
