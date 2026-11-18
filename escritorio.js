@@ -219,8 +219,8 @@ function orbe(a, k, cx) {
     <g opacity="${op}">
       <ellipse cx="110" cy="${CY}" rx="${R - 8}" ry="${R - 10}" fill="url(#orbCorpo)"/>
       <g transform="translate(110,${CY})">
-        <path class="memb m1" d="${cascaD(R - 5, 8, 4, 0)}" fill="${cor}" fill-opacity=".10" stroke="${cor}" stroke-width="2" opacity=".6"/>
-        <path class="memb m2" d="${cascaD(R - 14, 6, 5, 1.7)}" fill="${claro}" fill-opacity=".07" stroke="${claro}" stroke-width="1.4" opacity=".36"/>
+        <path class="memb m1" d="${cascaD(R - 4, 9, 2.4, 0)}" fill="${cor}" fill-opacity=".10" stroke="${cor}" stroke-width="2" opacity=".6"/>
+        <path class="memb m2" d="${cascaD(R - 13, 7, 3, 1.7)}" fill="${claro}" fill-opacity=".07" stroke="${claro}" stroke-width="1.4" opacity=".36"/>
       </g>
       <ellipse cx="${110 - R * .3}" cy="${CY - R * .34}" rx="${R * .3}" ry="${R * .22}" fill="#eafffb" opacity=".12" transform="rotate(-28 ${110 - R * .3} ${CY - R * .34})"/>
       ${faisca}
@@ -235,10 +235,55 @@ function orbe(a, k, cx) {
     <text x="110" y="257" text-anchor="middle" font-size="11" font-weight="700" letter-spacing=".08em" fill="#fff">CÉREBRO</text>
   </g></g>`;
 }
+/* A Patrícia aparece com a foto dela: é a pessoa que atende, não mais um robô. */
+function pessoa(a, k, i, cx, oy) {
+  const parado = k === 'dorme' || k === 'off', pt = OLHO[k];
+  const zzz = k === 'dorme' ? `<text class="z z1" x="140" y="86" font-size="13" font-weight="700" fill="#8a929a">z</text>
+    <text class="z z2" x="146" y="80" font-size="15" font-weight="700" fill="#8a929a">z</text>
+    <text class="z z3" x="152" y="74" font-size="17" font-weight="700" fill="#8a929a">Z</text>` : '';
+  return `<g transform="translate(${cx - 110},${oy || 0})"><g class="robo pes ${k}">
+    <ellipse cx="110" cy="292" rx="96" ry="9" fill="#000" opacity=".07"/>
+    <rect x="70" y="150" width="80" height="74" rx="14" fill="#2b3440"/>
+    <g class="corpo">
+      <path d="M72 192 q2 -40 38 -45 q36 5 38 45z" fill="${a.cor}"/>
+      <path d="M96 149 q14 11 28 0 l7 7 q-21 14 -42 0z" fill="#f4f7f5"/>
+      <path d="M110 160 l6 10 l-6 10 l-6 -10z" fill="${a.escuro}"/>
+      <g class="cabeca">
+        <clipPath id="pf${i}"><circle cx="110" cy="116" r="30"/></clipPath>
+        <circle cx="110" cy="116" r="30" fill="#e8d5c5"/>
+        <image href="assets/patricia.jpg" x="72" y="76" width="76" height="76"
+               clip-path="url(#pf${i})" preserveAspectRatio="xMidYMin slice"/>
+        <circle cx="110" cy="116" r="30" fill="none" stroke="#fff" stroke-width="3"/>
+        ${parado ? `<circle cx="110" cy="116" r="30" fill="#2b3440" opacity=".45"/>` : ''}
+        <path d="M82 112 q0 -30 28 -30 q28 0 28 30" stroke="#24302b" stroke-width="3.5" fill="none"/>
+        <rect x="77" y="108" width="8" height="16" rx="4" fill="#24302b"/>
+        <rect x="135" y="108" width="8" height="16" rx="4" fill="#24302b"/>
+        <path d="M82 122 q3 13 17 14" stroke="#24302b" stroke-width="2.4" fill="none"/>
+        <circle cx="100" cy="137" r="2.8" fill="#24302b"/>
+      </g>
+      <circle cx="131" cy="135" r="8" fill="#fff"/>
+      <circle class="antena" cx="131" cy="135" r="5.5" fill="${pt}" opacity="${parado ? .55 : 1}"/>
+      <rect class="braco-e" x="74" y="156" width="14" height="36" rx="7" fill="${a.cor}"/>
+      <rect class="braco-d" x="132" y="156" width="14" height="36" rx="7" fill="${a.cor}"/>
+    </g>
+    ${zzz}
+    <rect x="10" y="188" width="200" height="12" rx="3" fill="#caa47c"/>
+    <rect x="20" y="200" width="180" height="78" rx="3" fill="#b38b63"/>
+    <rect x="30" y="212" width="160" height="2" fill="#a07a54"/>
+    <rect x="22" y="278" width="10" height="12" fill="#8f6c49"/><rect x="188" y="278" width="10" height="12" fill="#8f6c49"/>
+    <rect x="84" y="182" width="50" height="7" rx="2" fill="#e8ecef"/>
+    <rect x="166" y="160" width="7" height="28" fill="#4b5560"/><rect x="156" y="184" width="27" height="5" rx="2" fill="#4b5560"/>
+    <rect x="137" y="107" width="72" height="56" rx="6" fill="#0b1015"/>
+    <rect x="140" y="110" width="66" height="50" rx="5" fill="#1d2630"/>
+    ${tela(a, k, i)}
+    <rect x="34" y="170" width="16" height="18" rx="3" fill="#fff" stroke="#c9d1cc"/><path d="M50 175 q7 0 7 6 q0 6 -7 6" fill="none" stroke="#c9d1cc" stroke-width="2"/>
+    ${k === 'trab' ? '<path class="vapor" d="M39 166 q-3 -5 0 -9" stroke="#b9c2bd" stroke-width="2" fill="none" stroke-linecap="round"/><path class="vapor vapor2" d="M45 166 q3 -5 0 -9" stroke="#b9c2bd" stroke-width="2" fill="none" stroke-linecap="round"/>' : ''}
+  </g></g>`;
+}
 function cena(estados) {
   const m = minBR(), dia = m >= 6 * 60 && m < 18 * 60, todosDormem = estados.every(e => e.k === 'dorme' || e.k === 'off');
-  const ceu = dia ? '<rect x="232" y="32" width="136" height="86" fill="#bfe3ff"/><circle cx="340" cy="58" r="11" fill="#ffe28a"/><path d="M245 104 q20 -18 40 0 q18 -14 36 0 q20 -16 40 0 v14 h-116z" fill="#9fd29a"/>'
-    : '<rect x="232" y="32" width="136" height="86" fill="#1c2b4a"/><circle cx="340" cy="58" r="10" fill="#f3f0d8"/><circle cx="345" cy="54" r="9" fill="#1c2b4a"/><circle cx="260" cy="50" r="1.4" fill="#fff"/><circle cx="285" cy="70" r="1.2" fill="#fff"/><circle cx="310" cy="45" r="1.5" fill="#fff"/><circle cx="270" cy="92" r="1.1" fill="#fff"/>';
+  const ceu = dia ? '<rect x="174" y="32" width="136" height="86" fill="#bfe3ff"/><circle cx="282" cy="58" r="11" fill="#ffe28a"/><path d="M187 104 q20 -18 40 0 q18 -14 36 0 q20 -16 40 0 v14 h-116z" fill="#9fd29a"/>'
+    : '<rect x="174" y="32" width="136" height="86" fill="#1c2b4a"/><circle cx="282" cy="58" r="10" fill="#f3f0d8"/><circle cx="287" cy="54" r="9" fill="#1c2b4a"/><circle cx="202" cy="50" r="1.4" fill="#fff"/><circle cx="227" cy="70" r="1.2" fill="#fff"/><circle cx="252" cy="45" r="1.5" fill="#fff"/><circle cx="212" cy="92" r="1.1" fill="#fff"/>';
   const clipsLocais = AG.map((a, i) => `<clipPath id="tl${i}"><rect x="140" y="110" width="66" height="50" rx="5"/></clipPath>`).join('');
   const planta = (x, y) => `<g transform="translate(${x},${y})"><rect x="-8" y="176" width="20" height="30" rx="3" fill="#c9805a"/><path d="M2 176 q-14 -20 -6 -40 q6 14 6 40 q2 -26 12 -38 q4 22 -12 38" fill="#4f9d5d"/></g>`;
   // ligações: tudo sai do Cérebro e chega em cada agente do andar de baixo
@@ -262,8 +307,8 @@ function cena(estados) {
     <rect y="215" width="${W}" height="${ANDAR - 215}" fill="#ebe5d4"/>
     ${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(j => `<line x1="${j * 125}" y1="215" x2="${j * 125 - 30}" y2="${ANDAR}" stroke="#e0d9c6" stroke-width="1.5"/>`).join('')}
     <ellipse cx="${CX}" cy="150" rx="210" ry="130" fill="url(#halo)"/>
-    <rect x="226" y="26" width="148" height="98" rx="4" fill="#fff" stroke="#d8d0bb" stroke-width="2"/>${ceu}
-    <line x1="300" y1="32" x2="300" y2="118" stroke="#fff" stroke-width="4"/><line x1="232" y1="75" x2="368" y2="75" stroke="#fff" stroke-width="4"/>
+    <rect x="168" y="26" width="148" height="98" rx="4" fill="#fff" stroke="#d8d0bb" stroke-width="2"/>${ceu}
+    <line x1="242" y1="32" x2="242" y2="118" stroke="#fff" stroke-width="4"/><line x1="174" y1="75" x2="310" y2="75" stroke="#fff" stroke-width="4"/>
     <circle cx="110" cy="62" r="30" fill="#fff" stroke="#d8d0bb" stroke-width="3"/>
     <text id="esc-relogio" x="110" y="68" text-anchor="middle" font-size="16" font-weight="600" fill="#1c1c1c">${hhmm()}</text>
     <text x="110" y="108" text-anchor="middle" font-size="10" fill="#8a929a">Brasília</text>
@@ -271,7 +316,7 @@ function cena(estados) {
     <image href="assets/coruja-branca.png" x="726" y="38" width="48" height="48"/>
     <text x="750" y="104" text-anchor="middle" font-size="9.5" font-weight="600" fill="#fff">MEU</text>
     <text x="750" y="115" text-anchor="middle" font-size="9.5" font-weight="600" fill="#fff">PATRIMÔNIO</text>
-    ${planta(830, 0)}${planta(150, 0)}
+    ${planta(820, 0)}${planta(96, 0)}
     <!-- piso do mezanino -->
     <rect y="${ANDAR - 8}" width="${W}" height="14" fill="#cfc6b0"/>
     <rect y="${ANDAR + 6}" width="${W}" height="4" fill="#b9af97" opacity=".6"/>
@@ -283,7 +328,8 @@ function cena(estados) {
     ${planta(15, ANDAR)}${planta(845, ANDAR)}
     ${fios}
     ${AG.map((a, i) => i === 0 ? orbe(a, estados[i].k, POS[i].x)
-                                : robo(a, estados[i].k, i, POS[i].x, POS[i].y)).join('')}
+                 : a.id === 'patricia' ? pessoa(a, estados[i].k, i, POS[i].x, POS[i].y)
+                                       : robo(a, estados[i].k, i, POS[i].x, POS[i].y)).join('')}
     ${todosDormem && !dia ? `<rect y="${Y0}" width="${W}" height="${H}" fill="#0b1630" opacity=".28"/>` : ''}
   </svg>`;
 }
@@ -308,7 +354,7 @@ function montar() {
   est.forEach((e, i) => {
     const b = document.createElement('div');
     b.className = 'bolha ' + e.k + (i === 0 ? ' cerebro' : ''); b.style.left = (POS[i].x / W * 100) + '%';
-    b.style.bottom = (100 - (POS[i].y + (i === 0 ? -20 : 64) - Y0) / H * 100) + '%';
+    b.style.bottom = (100 - (POS[i].y + (i === 0 ? -20 : AG[i].id === 'patricia' ? 74 : 64) - Y0) / H * 100) + '%';
     b.innerHTML = ESC(e.b) + (e.s ? `<small>${ESC(e.s)}</small>` : '');
     cenaEl.appendChild(b);
   });
@@ -323,7 +369,7 @@ function montar() {
     const d = dadosDe(a, ags) || {}, e = est[i], m = minBR(), naJ = m >= a.ini && m <= a.fim;
     const prox = !d.ativo ? '–' : !naJ ? 'amanhã às ' + horaIni(a) : d.ultima ? em(t(d.ultima.em) + a.int * 60e3 - Date.now()) : '–';
     const st = d.ultima ? (d.ultima.status === 'error' ? ' · <b style="color:#b42318">erro</b>' : d.ultima.status === 'success' ? ' · ok' : ' · ' + ESC(d.ultima.status)) : '';
-    return `<div class="ag${i === 0 ? ' cerebro' : ''}"><div class="ag-h"><i style="background:${a.cor}"></i><b>${a.nome}</b></div>
+    return `<div class="ag${i === 0 ? ' cerebro larga' : ''}"><div class="ag-h"><i style="background:${a.cor}"></i><b>${a.nome}</b></div>
       <div class="ag-f">${ESC(a.funcao)}</div>
       <span class="pill p-${e.k}">${ESC(e.rot)}</span>
       <div class="ag-l"><span>Última rodada:</span> ${d.ultima ? ha(d.ultima.em) + st : '–'}<br>

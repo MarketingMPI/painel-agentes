@@ -16,6 +16,10 @@ Tela separada, pelo botão **Escritório** no topo (ou `#escritorio` na URL). Ce
 uma esfera de energia animada no andar de cima — e, embaixo, os três que trabalham: **Patrícia**, **Monitor** e **Validador**.
 Cada um mostra o estado: trabalhando, de plantão, dormindo (fora do horário), atrasado ou com erro.
 
+A **Patrícia é desenhada como pessoa**, com a foto de `assets/patricia.jpg` recortada em círculo (`pessoa()` no
+`escritorio.js`); só os agentes de apoio são robôs. Trocar o rosto = trocar esse arquivo, que serve o header, o hero
+e a cena.
+
 **A Patrícia é um robô só no desenho, mas são três fluxos no n8n** (Atendente, MP PRO e Verificador). `dadosDe()` em
 `escritorio.js` consolida os três: basta um falhar, atrasar ou sair do ar para ela acender alerta, e `erros_24h` é a soma.
 Não apague fonte dessa lista sem mover o monitoramento para outro lugar — o fluxo continua rodando mesmo sem aparecer na tela.
