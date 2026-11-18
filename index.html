@@ -61,36 +61,48 @@ main{max-width:1180px;margin:0 auto;padding:22px 20px 40px}
   background:var(--lima);border:2px solid #fff}
 .hsep{width:1px;height:26px;background:var(--border);margin:0 2px}
 
-/* ---------- hero: a Patrícia é a protagonista ---------- */
-.hero{background:linear-gradient(135deg,var(--verde) 0%,var(--verde-prof) 100%);color:#fff;
-  border-radius:var(--r);padding:24px 26px;display:flex;align-items:center;gap:22px;margin-bottom:18px}
-.hero .face{width:92px;height:92px;flex:none;border-radius:50%;overflow:hidden;position:relative;
-  background:#eef7f0;box-shadow:0 8px 24px rgba(0,0,0,.28)}
-.hero .face img{width:100%;height:100%;display:block;object-fit:cover;object-position:center 12%}
-.hero .face em{position:absolute;right:3px;bottom:4px;width:18px;height:18px;border-radius:50%;
+/* ---------- hero: faixa cheia, com os cards sobrepostos ---------- */
+.herowrap{background:linear-gradient(135deg,var(--verde) 0%,var(--verde-prof) 100%);color:#fff;
+  padding:30px 0 78px}
+.heroin{max-width:1180px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:24px}
+.hero .face,.heroin .face{width:98px;height:98px;flex:none;border-radius:50%;overflow:hidden;position:relative;
+  background:#eef7f0;box-shadow:0 8px 26px rgba(0,0,0,.3)}
+.heroin .face img{width:100%;height:100%;display:block;object-fit:cover;object-position:center 12%}
+.heroin .face em{position:absolute;right:4px;bottom:5px;width:19px;height:19px;border-radius:50%;
   background:var(--lima-cl);border:3px solid var(--verde-prof);animation:pulso 2.8s infinite}
-@keyframes pulso{0%{box-shadow:0 0 0 0 rgba(97,206,112,.5)}70%{box-shadow:0 0 0 11px rgba(97,206,112,0)}100%{box-shadow:0 0 0 0 rgba(97,206,112,0)}}
-.hero h1{font-size:27px;font-weight:600;letter-spacing:-.2px;margin:0}
-.hero p{font-size:14px;color:rgba(255,255,255,.74);margin:4px 0 0;max-width:56ch;line-height:1.45}
-.hchips{margin-top:13px;display:flex;gap:9px;flex-wrap:wrap}
+@keyframes pulso{0%{box-shadow:0 0 0 0 rgba(97,206,112,.5)}70%{box-shadow:0 0 0 12px rgba(97,206,112,0)}100%{box-shadow:0 0 0 0 rgba(97,206,112,0)}}
+.heroin h1{font-size:29px;font-weight:600;letter-spacing:-.2px;margin:0}
+.heroin p{font-size:14.5px;color:rgba(255,255,255,.74);margin:5px 0 0;max-width:56ch;line-height:1.45}
+.hchips{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
 .hchips span{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);
-  border-radius:999px;padding:5px 12px;font-size:12.5px}
+  border-radius:999px;padding:6px 13px;font-size:13px}
 .hchips b{font-weight:600}
-@media (prefers-reduced-motion:reduce){.hero .face em{animation:none}}
+@media (prefers-reduced-motion:reduce){.heroin .face em{animation:none}}
 
-/* ---------- régua densa de métricas ---------- */
-.regua{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));background:var(--card);
-  border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:14px;box-shadow:var(--sh-xs)}
-.rm{padding:13px 14px;border-left:1px solid var(--border);min-width:0}
-.rm:first-child{border-left:0}
-.rm .l{font-size:11.5px;color:var(--muted-fg);display:flex;align-items:center;gap:6px;white-space:nowrap;
-  overflow:hidden;text-overflow:ellipsis}
-.rm .l i{width:8px;height:8px;border-radius:2px;flex:none}
-.rm .v{font-size:25px;font-weight:600;line-height:1.1;margin-top:4px}
-.rm.big{background:linear-gradient(135deg,var(--verde),var(--verde-prof));color:#fff;grid-column:span 2}
-.rm.big .l{color:rgba(255,255,255,.72)}
-.rm.big .v{font-size:34px}
-.rm.big .d{font-size:11.5px;color:rgba(255,255,255,.66);margin-top:3px}
+/* ---------- cartões que sobem sobre o verde ---------- */
+.fatia{display:grid;grid-template-columns:1.25fr 1fr 1fr 1fr;gap:14px;margin:-58px 0 24px;position:relative;z-index:2}
+.n{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px 20px;
+  box-shadow:0 8px 22px rgba(16,24,20,.09);min-width:0}
+.n .lab{font-size:13px;color:var(--muted-fg);display:flex;align-items:center;gap:7px}
+.n .lab i{width:9px;height:9px;border-radius:3px;display:block;flex:none}
+.n .val{font-size:34px;font-weight:600;line-height:1.05;margin-top:8px}
+.n .pe{font-size:12.5px;color:var(--muted-fg);margin-top:7px;line-height:1.35}
+.n.key .val{font-size:44px;color:var(--verde)}
+.n .trilho{height:8px;border-radius:5px;background:#eef1ef;overflow:hidden;margin-top:12px;display:flex}
+.n .trilho div{height:100%}
+
+/* ---------- quem cuida da Patrícia ---------- */
+.qc{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px;margin-bottom:6px}
+.qc-c{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 15px;display:flex;gap:11px;align-items:flex-start}
+.qc-i{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;flex:none}
+.qc-i svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.qc-c h4{font-size:14px;font-weight:600;margin:0 0 2px}
+.qc-c p{font-size:12px;color:var(--muted-fg);line-height:1.45;margin:0}
+.qc-s{font-size:11.5px;margin-top:6px;display:inline-flex;align-items:center;gap:5px;font-weight:500}
+.qc-s i{width:6px;height:6px;border-radius:50%;display:block}
+.qc-ok{color:var(--lima)}.qc-ok i{background:var(--lima)}
+.qc-w{color:#b7791f}.qc-w i{background:#e0a43a}
+.qc-e{color:#b42318}.qc-e i{background:#b42318}
 
 /* ---------- agente ---------- */
 .agente{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh-xs);margin-bottom:18px}
@@ -152,15 +164,16 @@ svg.chart text{font-family:inherit;fill:#8a929a;font-size:11px}
 .rodape{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:14px;font-size:12px;color:var(--muted-fg)}
 .aviso{background:#fff4e5;border:1px solid #f5d9a8;color:#7a4b00;border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:14px}
 
-@media (max-width:1100px){.regua{grid-template-columns:repeat(4,minmax(0,1fr))}.rm.big{grid-column:span 4}}
+.filtros{margin-top:4px}
+@media (max-width:1100px){.fatia{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:900px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2{grid-template-columns:minmax(0,1fr)}
-  .hero{flex-direction:column;align-items:flex-start;gap:16px}}
+  .heroin{flex-direction:column;align-items:flex-start;gap:16px}}
 @media (max-width:520px){
   .hin{padding:10px 14px}.htit small{display:none}.usr span{display:none}
   main{padding:16px 14px 32px}.kpi .k-v{font-size:26px}
   .agente{flex-wrap:wrap}.ag-on{margin-left:0}
-  .regua{grid-template-columns:repeat(2,minmax(0,1fr))}.rm.big{grid-column:span 2}
-  .hero{padding:20px}.hero h1{font-size:23px}.hero .face{width:72px;height:72px}
+  .fatia{grid-template-columns:minmax(0,1fr);margin-top:-50px}
+  .herowrap{padding:22px 0 70px}.heroin h1{font-size:24px}.heroin .face{width:76px;height:76px}
 }
 </style>
 </head>
@@ -192,26 +205,16 @@ svg.chart text{font-family:inherit;fill:#8a929a;font-size:11px}
     <div class="htit">Painel Patrícia<small>Meu Patrimônio · atendimento no WhatsApp</small></div>
     <div class="usr" id="usr"></div>
   </div></header>
+  <div class="herowrap"><div class="heroin">
+    <div class="face"><img src="assets/patricia.jpg" alt="Patrícia"><em></em></div>
+    <div>
+      <h1>Patrícia</h1>
+      <p>Atende os leads no WhatsApp da Meu Patrimônio: entende o momento de cada um e passa para um consultor quem tem perfil.</p>
+      <div class="hchips" id="hchips"></div>
+    </div>
+  </div></div>
   <main>
-    <div class="hero">
-      <div class="face"><img src="assets/patricia.jpg" alt="Patrícia"><em></em></div>
-      <div>
-        <h1>Patrícia</h1>
-        <p>Atende no WhatsApp da Meu Patrimônio, entende o momento de cada lead e passa para um consultor quem tem perfil.</p>
-        <div class="hchips" id="hchips"></div>
-      </div>
-    </div>
-    <div id="escritorio"></div>
-    <h2 class="sec-tit">Desempenho</h2>
-    <div class="agente">
-      <div class="ag-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.4L3 21l2.1-5.6A8.4 8.4 0 1 1 21 11.5z"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"/></svg></div>
-      <div>
-        <div class="ag-t">O que a Patrícia faz</div>
-        <div class="ag-s">Conversa com os leads que ficaram fora do perfil no formulário do Diagnóstico, com quem chega pelo botão do site e com quem quer saber do Indique e Ganhe.</div>
-      </div>
-      <div class="ag-on" id="agon"><i></i> No ar</div>
-    </div>
-
+    <div id="cards"></div>
     <div class="filtros">
       <div><span class="flab">Período</span><div class="seg" id="fper">
         <button data-p="hoje">Hoje</button><button data-p="7d">7 dias</button><button data-p="30d">30 dias</button><button data-p="mes">Este mês</button><button data-p="tudo">Tudo</button>
@@ -223,6 +226,10 @@ svg.chart text{font-family:inherit;fill:#8a929a;font-size:11px}
     </div>
 
     <div id="conteudo"></div>
+
+    <h2 class="sec-tit">Quem cuida da Patrícia <small style="font-weight:400;font-size:13px;color:var(--muted-fg)">os agentes que vigiam, corrigem e ensinam</small></h2>
+    <div class="qc" id="quem-cuida"></div>
+
     <div id="leads"></div>
 
     <div class="notas">
@@ -235,6 +242,8 @@ svg.chart text{font-family:inherit;fill:#8a929a;font-size:11px}
     </div>
     <div id="mppro"></div>
     <div id="verificador" class="vf-fim"></div>
+    <h2 class="sec-tit">Escritório dos agentes</h2>
+    <div id="escritorio"></div>
     <div class="rodape"><span id="atual"></span><span>Atualiza sozinho a cada 2 minutos</span></div>
   </main>
 </div>
@@ -365,32 +374,28 @@ function render(aviso) {
   const aband = cv.filter(c => c.abandono).length, lem = cv.filter(c => c.lembrete).length, volt = cv.filter(c => c.lembrete && c.voltou).length;
   const decididas = req + fora;
   let h = aviso ? `<div class="aviso">${ESC(aviso)}</div>` : '';
-  h += '<div class="regua">' +
-    rm('Taxa de requalificação', pct(req, decididas), null, true,
-       decididas ? `${req} de ${decididas} conversas decididas` : 'nenhuma decidida ainda') +
-    rm('Conversas', nf.format(cv.length)) +
-    rm('Requalificados', nf.format(req), 'var(--c-req)') +
-    rm('Fora do perfil', nf.format(fora), 'var(--c-fora)') +
-    rm('Em curso', nf.format(and), 'var(--c-and)') +
-    rm('P/ equipe', nf.format(eq), 'var(--c-eq)') +
-    rm('Pararam', nf.format(aband)) +
-    '</div>' +
-    '<div class="kpis-sec">' +
-    kpi('Sem interesse', nf.format(sem), 'pediram para não continuar', 'var(--c-sem)') +
-    (n('indicacao') ? kpi('Indique e Ganhe', nf.format(n('indicacao')), 'tiraram dúvidas do programa', 'var(--c-ind)') : '') +
-    kpi('Lembretes enviados', nf.format(lem), lem ? `${volt} voltaram a responder (${pct(volt, lem)})` : 'nenhum lembrete no período') +
+  $('cards').innerHTML = '<div class="fatia">' +
+    `<div class="n key"><div class="lab">Taxa de requalificação</div><div class="val">${pct(req, decididas)}</div>` +
+    `<div class="pe">${decididas ? `${req} de ${decididas} conversas decididas` : 'nenhuma conversa decidida ainda'}</div>` +
+    `<div class="trilho"><div style="width:${decididas ? req / decididas * 100 : 0}%;background:var(--c-req)"></div>` +
+    `<div style="width:${decididas ? fora / decididas * 100 : 0}%;background:var(--c-fora)"></div></div></div>` +
+    `<div class="n"><div class="lab">Conversas</div><div class="val">${nf.format(cv.length)}</div><div class="pe">iniciadas no período</div></div>` +
+    `<div class="n"><div class="lab"><i style="background:var(--c-req)"></i>Requalificados</div><div class="val">${nf.format(req)}</div><div class="pe">foram para um consultor</div></div>` +
+    `<div class="n"><div class="lab"><i style="background:var(--c-fora)"></i>Fora do perfil</div><div class="val">${nf.format(fora)}</div><div class="pe">Base de Relacionamento</div></div>` +
     '</div>';
   if (!cv.length) {
     h += `<div class="card"><div class="vazio">Nenhuma conversa começou neste período${S.o !== 'todas' ? ' com esta origem' : ''}.</div></div>`;
   } else {
     const dist = RES.map(r => [r, n(r[0])]).filter(x => x[1]);
-    h += '<div class="grid2">' +
+    h += '<h2 class="sec-tit">Como foi o período</h2>' +
+      '<div class="grid2">' +
       `<div class="card"><h3>Conversas por dia</h3><div class="c-s">Pelo dia em que a conversa começou, colorido pelo resultado atual</div>${grafico(cv, de, ate)}` +
       `<div class="leg">${RES.map(r => `<span><i style="background:${r[2]}"></i>${r[1]}</span>`).join('')}</div></div>` +
       `<div class="card"><h3>Resultado das conversas</h3><div class="c-s">${nf.format(cv.length)} conversa${cv.length > 1 ? 's' : ''} no período</div>` +
       `<div class="dist">${dist.map(([r, v]) => `<div style="width:${v / cv.length * 100}%;background:${r[2]}" title="${r[1]}: ${v}"></div>`).join('')}</div>` +
       RES.map(r => `<div class="drow"><i style="background:${r[2]}"></i>${r[1]}<b>${n(r[0])}</b><em>${pct(n(r[0]), cv.length)}</em></div>`).join('') +
-      '</div>' +
+      `<div class="lemb">Pararam de responder: <b>${aband}</b> · lembretes enviados: <b>${lem}</b>` +
+      `${lem ? `, ${volt} voltaram a responder (${pct(volt, lem)})` : ''}</div></div>` +
       '</div>';
   }
   box.innerHTML = h;

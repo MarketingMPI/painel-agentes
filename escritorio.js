@@ -16,6 +16,28 @@ const AG = [
    cor: '#d9c795', escuro: '#3a3229', int: 1, ini: 8 * 60, fim: 20 * 60 - 1, tela: 'pro', espera: 'Esperando mensagem sobre o MP PRO'},
 ];
 const ROT = {trab: 'Trabalhando', plantao: 'De plantão', dorme: 'Dormindo', erro: 'Com erro', atraso: 'Atrasado', off: 'Desligado'};
+
+/* Cartões "Quem cuida da Patrícia": só os agentes de apoio, com a última rodada de cada um. */
+const QC_IC = {
+  monitor: '<path d="M3 17l5-6 4 4 5-8 4 5"/>',
+  validador: '<path d="M20 6L9 17l-5-5"/>',
+  cerebro: '<path d="M12 3a6 6 0 0 0-3 11v3h6v-3a6 6 0 0 0-3-11z"/><path d="M10 21h4"/>',
+  verificador: '<path d="M4 6h16M4 12h16M4 18h10"/>'
+};
+const QC_ORDEM = ['monitor', 'validador', 'cerebro', 'verificador'];
+function quemCuida(ags, est) {
+  const box = document.getElementById('quem-cuida'); if (!box) return;
+  box.innerHTML = QC_ORDEM.map(id => {
+    const i = AG.findIndex(a => a.id === id); if (i < 0) return '';
+    const a = AG[i], d = ags.find(x => x.id === id) || {}, e = est[i] || {};
+    const ruim = e.k === 'erro' || e.k === 'atraso' || e.k === 'off';
+    const cls = ruim ? (e.k === 'erro' ? 'qc-e' : 'qc-w') : 'qc-ok';
+    const quando = d.ultima ? 'rodou ' + ha(d.ultima.em) : (ROT[e.k] || '—');
+    return `<div class="qc-c"><div class="qc-i" style="background:${a.cor}"><svg viewBox="0 0 24 24">${QC_IC[id]}</svg></div>
+      <div><h4>${ESC(a.nome)}</h4><p>${ESC(a.funcao)}</p>
+      <span class="qc-s ${cls}"><i></i>${ESC(quando)}</span></div></div>`;
+  }).join('');
+}
 const OLHO = {trab: '#7CFFB2', plantao: '#9fd8ff', erro: '#ff6b5e', atraso: '#ffc861', off: '#8a929a', dorme: '#8a929a'};
 const TZ = 'America/Sao_Paulo';
 const W = 1250, Y0 = -22, H = 642, ANDAR = 320;          // cena com dois andares
@@ -212,6 +234,7 @@ function montar() {
     cenaEl.appendChild(b);
   });
   const rel = document.getElementById('esc-relogio'); if (rel) rel.textContent = hhmm();
+  quemCuida(ags, est);
   const n = k => est.filter(e => e.k === k).length;
   document.getElementById('esc-resumo').innerHTML =
     `<span><b>${n('trab')}</b> trabalhando</span><span><b>${n('plantao')}</b> de plantão</span>` +
