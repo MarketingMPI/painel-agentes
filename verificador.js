@@ -51,7 +51,9 @@ function comQuem(c) {
   const q = c.com_quem || 'Ninguém';
   if (q === 'celular') return '<span class="vf-sit">Equipe (celular)</span>';
   if (q === 'Ninguém') return '<span class="vf-sit fora">Ninguém</span>';
-  return `<b>${ESC(q)}</b>${NAO_CONSULTOR.includes(q) ? '' : '<small>consultor</small>'}`;
+  // o n8n grava "Atendente (bot)" desde antes da persona; aqui mostramos o nome que o lead vê
+  const rotulo = q === 'Atendente (bot)' ? 'Patrícia' : q;
+  return `<b>${ESC(rotulo)}</b>${NAO_CONSULTOR.includes(q) ? '' : '<small>consultor</small>'}`;
 }
 function desenhar() {
   const box = document.getElementById('verificador'); if (!box) return;

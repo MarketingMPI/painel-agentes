@@ -85,7 +85,7 @@ function desenhar() {
       }).join('') + '</tbody></table></div>';
   }
   box.innerHTML = `<div class="card lcard"><div class="lhead"><div><h3>Leads atendidos pelo bot</h3>
-    <div class="c-s">Nome e WhatsApp de quem conversou com o Atendente, com o mesmo período e origem dos filtros acima</div></div>
+    <div class="c-s">Nome e WhatsApp de quem conversou com a Patrícia, com o mesmo período e origem dos filtros acima</div></div>
     ${LISTA ? `<span class="lct">${linhas().length} lead${linhas().length === 1 ? '' : 's'}</span>` : ''}</div>${corpo}</div>`;
 }
 
@@ -116,7 +116,7 @@ async function abrir(id, info) {
     const d = dia(m.em); if (d !== ultDia) { h += `<div class="cvd">${ESC(d)}</div>`; ultDia = d; }
     const txt = m.texto ? ESC(m.texto).replace(/\n/g, '<br>') : '';
     const midia = m.tipo && m.tipo !== 'text' ? `<i>[${ESC(TIPO[m.tipo] || m.tipo)}]</i>${txt ? '<br>' : ''}` : '';
-    const quem = m.de === 'bot' ? 'Atendente (bot)' : m.de === 'equipe' ? ESC(m.quem || 'Equipe') : m.de === 'modelo' ? 'Modelo de retomada' : m.de === 'automacao' ? 'Automação do Pipedrive' : ESC(primeiroNome(nome));
+    const quem = m.de === 'bot' ? 'Patrícia' : m.de === 'equipe' ? ESC(m.quem || 'Equipe') : m.de === 'modelo' ? 'Modelo de retomada' : m.de === 'automacao' ? 'Automação do Pipedrive' : ESC(primeiroNome(nome));
     h += `<div class="mg ${m.de}"><div class="mb"><small>${quem}</small>${midia}${txt || (midia ? '' : '<i>[sem texto]</i>')}<em>${hora(m.em)}</em></div></div>`;
   }
   b.innerHTML = h; b.scrollTop = b.scrollHeight;

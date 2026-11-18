@@ -2,17 +2,17 @@
 (function () {
 'use strict';
 const AG = [
-  {id: 'cerebro', nome: 'Cérebro', funcao: 'Central: guarda o que a empresa sabe e o que o bot aprendeu nas conversas, e alimenta os outros agentes.',
+  {id: 'cerebro', nome: 'Cérebro', funcao: 'Central: guarda o que a empresa sabe e o que a Patrícia aprendeu nas conversas, e alimenta os outros agentes.',
    cor: '#e0a43a', escuro: '#b57f1d', int: 15, ini: 8 * 60, fim: 21 * 60 + 30, tela: 'ideia', espera: 'Esperando conversas novas'},
-  {id: 'atendente', nome: 'Atendente', funcao: 'Conversa com os leads no WhatsApp e decide quem vai para o consultor.',
+  {id: 'atendente', nome: 'Patrícia', funcao: 'Conversa com os leads no WhatsApp e decide quem vai para o consultor.',
    cor: '#16a34a', escuro: '#0f7a35', int: 1, ini: 8 * 60, fim: 20 * 60 - 1, tela: 'chat', espera: 'Esperando mensagem de lead'},
-  {id: 'monitor', nome: 'Monitor', funcao: 'Vigia o Atendente a cada 10 minutos e avisa a equipe se algo der errado.',
-   cor: '#3b6fd8', escuro: '#2a52a6', int: 10, ini: 8 * 60, fim: 20 * 60 + 40, tela: 'grafico', espera: 'De olho no Atendente'},
+  {id: 'monitor', nome: 'Monitor', funcao: 'Vigia a Patrícia a cada 10 minutos e avisa a equipe se algo der errado.',
+   cor: '#3b6fd8', escuro: '#2a52a6', int: 10, ini: 8 * 60, fim: 20 * 60 + 40, tela: 'grafico', espera: 'De olho na Patrícia'},
   {id: 'validador', nome: 'Validador', funcao: 'Confere a cada 30 minutos se o Monitor está fazendo o trabalho direito.',
    cor: '#8b5cf6', escuro: '#6a3fd0', int: 30, ini: 8 * 60 + 10, fim: 21 * 60, tela: 'check', espera: 'De olho no Monitor'},
   {id: 'verificador', nome: 'Verificador', funcao: 'Revisa as conversas paradas há mais de 24 h, confere o Pipedrive e separa por assunto.',
    cor: '#0f9f9a', escuro: '#0b7a76', int: 30, ini: 7 * 60, fim: 22 * 60, tela: 'lista', espera: 'Esperando a próxima ronda'},
-  {id: 'mppro', nome: 'MP PRO', funcao: 'Atende quem fala do MP PRO no WhatsApp: tira dúvidas, manda o link e passa aluno com problema para a equipe.',
+  {id: 'mppro', nome: 'Patrícia · MP PRO', funcao: 'Atende quem fala do MP PRO no WhatsApp: tira dúvidas, manda o link e passa aluno com problema para a equipe.',
    cor: '#d9c795', escuro: '#3a3229', int: 1, ini: 8 * 60, fim: 20 * 60 - 1, tela: 'pro', espera: 'Esperando mensagem sobre o MP PRO'},
 ];
 const ROT = {trab: 'Trabalhando', plantao: 'De plantão', dorme: 'Dormindo', erro: 'Com erro', atraso: 'Atrasado', off: 'Desligado'};
