@@ -43,3 +43,13 @@ Cada conversa entra no período pela data em que começou.
 `python _preview.py` gera `_preview.html` (fora do git): o painel real com a sessão e as RPCs
 simuladas por um stub de `window.fetch`, para abrir em `file://` e conferir o visual sem precisar
 da conta Supabase. Nenhum dado real sai daqui.
+
+## A persona
+O rosto da Patrícia é `assets/patricia.svg`: ilustração vetorial **original**, criada para a MP.
+Não usar foto nem rosto de pessoa real como persona comercial — exige cessão de direito de imagem
+(Código Civil art. 20) e cria risco reputacional para uma consultoria regulada.
+A personalidade dela está documentada no Obsidian em `SweetFox/Cérebro MP/Patrícia - Persona.md`.
+
+## Variantes de layout
+`sketches/` guarda as três direções visuais comparadas antes de escolher o layout atual
+(híbrido: hero da persona + régua densa de métricas). São descartáveis, servem de referência.

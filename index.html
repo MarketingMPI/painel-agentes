@@ -55,11 +55,42 @@ main{max-width:1180px;margin:0 auto;padding:22px 20px 40px}
 
 /* avatar da Patrícia no topo */
 .pav{width:34px;height:34px;border-radius:50%;background:linear-gradient(145deg,var(--verde),var(--verde-prof));
-  display:grid;place-items:center;flex:none;position:relative;box-shadow:0 2px 6px rgba(0,80,60,.25)}
-.pav svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  display:grid;place-items:center;flex:none;position:relative;box-shadow:0 2px 6px rgba(0,80,60,.25);overflow:hidden}
+.pav img{width:100%;height:100%;display:block}
 .pav b{position:absolute;right:-1px;bottom:-1px;width:11px;height:11px;border-radius:50%;
   background:var(--lima);border:2px solid #fff}
 .hsep{width:1px;height:26px;background:var(--border);margin:0 2px}
+
+/* ---------- hero: a Patrícia é a protagonista ---------- */
+.hero{background:linear-gradient(135deg,var(--verde) 0%,var(--verde-prof) 100%);color:#fff;
+  border-radius:var(--r);padding:24px 26px;display:flex;align-items:center;gap:22px;margin-bottom:18px}
+.hero .face{width:92px;height:92px;flex:none;border-radius:50%;overflow:hidden;position:relative;
+  background:#eef7f0;box-shadow:0 8px 24px rgba(0,0,0,.28)}
+.hero .face img{width:100%;height:100%;display:block}
+.hero .face em{position:absolute;right:3px;bottom:4px;width:18px;height:18px;border-radius:50%;
+  background:var(--lima-cl);border:3px solid var(--verde-prof);animation:pulso 2.8s infinite}
+@keyframes pulso{0%{box-shadow:0 0 0 0 rgba(97,206,112,.5)}70%{box-shadow:0 0 0 11px rgba(97,206,112,0)}100%{box-shadow:0 0 0 0 rgba(97,206,112,0)}}
+.hero h1{font-size:27px;font-weight:600;letter-spacing:-.2px;margin:0}
+.hero p{font-size:14px;color:rgba(255,255,255,.74);margin:4px 0 0;max-width:56ch;line-height:1.45}
+.hchips{margin-top:13px;display:flex;gap:9px;flex-wrap:wrap}
+.hchips span{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);
+  border-radius:999px;padding:5px 12px;font-size:12.5px}
+.hchips b{font-weight:600}
+@media (prefers-reduced-motion:reduce){.hero .face em{animation:none}}
+
+/* ---------- régua densa de métricas ---------- */
+.regua{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));background:var(--card);
+  border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:14px;box-shadow:var(--sh-xs)}
+.rm{padding:13px 14px;border-left:1px solid var(--border);min-width:0}
+.rm:first-child{border-left:0}
+.rm .l{font-size:11.5px;color:var(--muted-fg);display:flex;align-items:center;gap:6px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.rm .l i{width:8px;height:8px;border-radius:2px;flex:none}
+.rm .v{font-size:25px;font-weight:600;line-height:1.1;margin-top:4px}
+.rm.big{background:linear-gradient(135deg,var(--verde),var(--verde-prof));color:#fff;grid-column:span 2}
+.rm.big .l{color:rgba(255,255,255,.72)}
+.rm.big .v{font-size:34px}
+.rm.big .d{font-size:11.5px;color:rgba(255,255,255,.66);margin-top:3px}
 
 /* ---------- agente ---------- */
 .agente{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh-xs);margin-bottom:18px}
@@ -121,11 +152,15 @@ svg.chart text{font-family:inherit;fill:#8a929a;font-size:11px}
 .rodape{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:14px;font-size:12px;color:var(--muted-fg)}
 .aviso{background:#fff4e5;border:1px solid #f5d9a8;color:#7a4b00;border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:14px}
 
-@media (max-width:900px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:1100px){.regua{grid-template-columns:repeat(4,minmax(0,1fr))}.rm.big{grid-column:span 4}}
+@media (max-width:900px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2{grid-template-columns:minmax(0,1fr)}
+  .hero{flex-direction:column;align-items:flex-start;gap:16px}}
 @media (max-width:520px){
   .hin{padding:10px 14px}.htit small{display:none}.usr span{display:none}
   main{padding:16px 14px 32px}.kpi .k-v{font-size:26px}
   .agente{flex-wrap:wrap}.ag-on{margin-left:0}
+  .regua{grid-template-columns:repeat(2,minmax(0,1fr))}.rm.big{grid-column:span 2}
+  .hero{padding:20px}.hero h1{font-size:23px}.hero .face{width:72px;height:72px}
 }
 </style>
 </head>
@@ -151,13 +186,21 @@ svg.chart text{font-family:inherit;fill:#8a929a;font-size:11px}
     <img src="assets/favicon.png" alt="">
     <div class="hsep"></div>
     <div class="pav" title="Patrícia">
-      <svg viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.4L3 21l2.1-5.6A8.4 8.4 0 1 1 21 11.5z"/></svg>
+      <img src="assets/patricia.svg" alt="">
       <b></b>
     </div>
     <div class="htit">Painel Patrícia<small>Meu Patrimônio · atendimento no WhatsApp</small></div>
     <div class="usr" id="usr"></div>
   </div></header>
   <main>
+    <div class="hero">
+      <div class="face"><img src="assets/patricia.svg" alt="Patrícia"><em></em></div>
+      <div>
+        <h1>Patrícia</h1>
+        <p>Atende no WhatsApp da Meu Patrimônio, entende o momento de cada lead e passa para um consultor quem tem perfil.</p>
+        <div class="hchips" id="hchips"></div>
+      </div>
+    </div>
     <div id="escritorio"></div>
     <h2 class="sec-tit">Desempenho</h2>
     <div class="agente">
@@ -284,6 +327,10 @@ const RES = [
 function kpi(l, v, s, cor, dest) {
   return `<div class="kpi${dest ? ' dest' : ''}"><div class="k-l">${cor ? `<i style="background:${cor}"></i>` : ''}${l}</div><div class="k-v">${v}</div><div class="k-s">${s || '&nbsp;'}</div></div>`;
 }
+function rm(l, v, cor, dest, det) {
+  return `<div class="rm${dest ? ' big' : ''}"><div class="l">${cor ? `<i style="background:${cor}"></i>` : ''}${l}</div>` +
+         `<div class="v">${v}</div>${det ? `<div class="d">${det}</div>` : ''}</div>`;
+}
 function grafico(convs, de, ate) {
   const dias = []; for (let d = de; d <= ate; d = addDias(d, 1)) dias.push(d);
   if (dias.length > 62) dias.splice(0, dias.length - 62);
@@ -318,18 +365,20 @@ function render(aviso) {
   const aband = cv.filter(c => c.abandono).length, lem = cv.filter(c => c.lembrete).length, volt = cv.filter(c => c.lembrete && c.voltou).length;
   const decididas = req + fora;
   let h = aviso ? `<div class="aviso">${ESC(aviso)}</div>` : '';
-  h += '<div class="kpis">' +
-    kpi('Taxa de requalificação', pct(req, decididas), decididas ? `${req} de ${decididas} conversas decididas` : 'nenhuma conversa decidida ainda', null, true) +
-    kpi('Conversas', nf.format(cv.length), 'iniciadas no período') +
-    kpi('Requalificados', nf.format(req), 'passaram para um consultor', 'var(--c-req)') +
-    kpi('Fora do perfil', nf.format(fora), 'foram para a Base de Relacionamento', 'var(--c-fora)') +
+  h += '<div class="regua">' +
+    rm('Taxa de requalificação', pct(req, decididas), null, true,
+       decididas ? `${req} de ${decididas} conversas decididas` : 'nenhuma decidida ainda') +
+    rm('Conversas', nf.format(cv.length)) +
+    rm('Requalificados', nf.format(req), 'var(--c-req)') +
+    rm('Fora do perfil', nf.format(fora), 'var(--c-fora)') +
+    rm('Em curso', nf.format(and), 'var(--c-and)') +
+    rm('P/ equipe', nf.format(eq), 'var(--c-eq)') +
+    rm('Pararam', nf.format(aband)) +
     '</div>' +
     '<div class="kpis-sec">' +
-    kpi('Em andamento', nf.format(and), 'a Patrícia ainda está conversando', 'var(--c-and)') +
-    kpi('Pararam de responder', nf.format(aband), 'encerradas após 24 h sem resposta') +
     kpi('Sem interesse', nf.format(sem), 'pediram para não continuar', 'var(--c-sem)') +
-    kpi('Passaram para a equipe', nf.format(eq), 'alguém do time assumiu antes', 'var(--c-eq)') +
     (n('indicacao') ? kpi('Indique e Ganhe', nf.format(n('indicacao')), 'tiraram dúvidas do programa', 'var(--c-ind)') : '') +
+    kpi('Lembretes enviados', nf.format(lem), lem ? `${volt} voltaram a responder (${pct(volt, lem)})` : 'nenhum lembrete no período') +
     '</div>';
   if (!cv.length) {
     h += `<div class="card"><div class="vazio">Nenhuma conversa começou neste período${S.o !== 'todas' ? ' com esta origem' : ''}.</div></div>`;
@@ -341,12 +390,19 @@ function render(aviso) {
       `<div class="card"><h3>Resultado das conversas</h3><div class="c-s">${nf.format(cv.length)} conversa${cv.length > 1 ? 's' : ''} no período</div>` +
       `<div class="dist">${dist.map(([r, v]) => `<div style="width:${v / cv.length * 100}%;background:${r[2]}" title="${r[1]}: ${v}"></div>`).join('')}</div>` +
       RES.map(r => `<div class="drow"><i style="background:${r[2]}"></i>${r[1]}<b>${n(r[0])}</b><em>${pct(n(r[0]), cv.length)}</em></div>`).join('') +
-      `<div class="lemb">Lembretes enviados: <b>${lem}</b> · voltaram a responder depois do lembrete: <b>${volt}</b>${lem ? ' (' + pct(volt, lem) + ')' : ''}</div></div>` +
+      '</div>' +
       '</div>';
   }
   box.innerHTML = h;
   const g = DADOS.gerado ? new Date(DADOS.gerado) : new Date();
-  $('atual').textContent = 'Dados de ' + new Intl.DateTimeFormat('pt-BR', {timeZone: TZ, day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'}).format(g).replace(',', ' às');
+  const hora = new Intl.DateTimeFormat('pt-BR', {timeZone: TZ, day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'}).format(g).replace(',', ' às');
+  $('atual').textContent = 'Dados de ' + hora;
+  const abertas = (DADOS.conversas || []).filter(c => c.status === 'conversando').length;
+  const hc = $('hchips');
+  if (hc) hc.innerHTML =
+    `<span>Agora: <b>${nf.format(abertas)} conversa${abertas === 1 ? '' : 's'} em aberto</b></span>` +
+    `<span>Atende das <b>8h às 20h</b></span>` +
+    `<span>Atualizado <b>${ESC(hora.split(' às')[1] || hora)}</b></span>`;
   try { localStorage.setItem('mp-agentes-filtros', JSON.stringify(S)); } catch (e) { /* */ }
 }
 

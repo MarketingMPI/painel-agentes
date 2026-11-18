@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A · Sala da Patrícia</title>
+<style>
+@font-face{font-family:'Campton';src:url(../../assets/CamptonBook.otf) format('opentype');font-weight:400}
+@font-face{font-family:'Campton';src:url(../../assets/CamptonMedium.otf) format('opentype');font-weight:500}
+@font-face{font-family:'Campton';src:url(../../assets/CamptonSemiBold.otf) format('opentype');font-weight:600}
+:root{
+  --verde:#00503c;--prof:#003326;--lima:#00a611;--lima-cl:#61ce70;
+  --fg:#1c1c1c;--mut:#69727d;--bd:#e4e7e5;--bg:#f7f9f7;
+  --req:#00a611;--fora:#9aa3ab;--sem:#e0a43a;--eq:#3b6fd8;--ind:#7a5cc4;--and:#c9ead0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Campton',system-ui,'Segoe UI',sans-serif;color:var(--fg);background:var(--bg);-webkit-font-smoothing:antialiased;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px 48px}
+
+/* ---- barra fina ---- */
+.bar{background:#fff;border-bottom:1px solid var(--bd)}
+.bar .in{max-width:1180px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--mut)}
+.bar b{color:var(--fg);font-weight:500;font-size:14px}
+.bar .r{margin-left:auto;display:flex;gap:8px;align-items:center}
+.bar button{font:inherit;font-size:13px;border:1px solid var(--bd);background:#fff;border-radius:8px;padding:5px 10px;cursor:pointer;color:var(--fg)}
+
+/* ---- hero: a Patrícia é a protagonista ---- */
+.hero{background:linear-gradient(135deg,var(--verde) 0%,var(--prof) 100%);color:#fff;margin-bottom:-56px;padding:30px 0 76px}
+.hero .in{max-width:1180px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:26px}
+.av{width:104px;height:104px;flex:none;border-radius:50%;background:#e8f6ea;position:relative;box-shadow:0 8px 26px rgba(0,0,0,.26)}
+.av svg{width:100%;height:100%;display:block}
+.av .on{position:absolute;right:4px;bottom:4px;width:20px;height:20px;border-radius:50%;background:var(--lima-cl);border:3px solid var(--prof);
+  box-shadow:0 0 0 0 rgba(97,206,112,.7);animation:pulso 2.6s infinite}
+@keyframes pulso{0%{box-shadow:0 0 0 0 rgba(97,206,112,.55)}70%{box-shadow:0 0 0 12px rgba(97,206,112,0)}100%{box-shadow:0 0 0 0 rgba(97,206,112,0)}}
+.hname{font-size:30px;font-weight:600;letter-spacing:-.2px}
+.hsub{font-size:14.5px;color:rgba(255,255,255,.72);margin-top:3px;max-width:52ch}
+.hora{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
+.chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:6px 13px;font-size:13px}
+.chip b{font-weight:600}
+
+/* ---- números ---- */
+.fatia{display:grid;grid-template-columns:1.25fr 1fr 1fr 1fr;gap:14px;margin-bottom:22px;position:relative;z-index:2}
+.n{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:18px 20px;box-shadow:0 6px 18px rgba(16,24,20,.06)}
+.n .lab{font-size:13px;color:var(--mut);display:flex;align-items:center;gap:7px}
+.n .lab i{width:9px;height:9px;border-radius:3px;display:block}
+.n .val{font-size:34px;font-weight:600;line-height:1.05;margin-top:8px}
+.n .pe{font-size:12.5px;color:var(--mut);margin-top:7px}
+.n.key{background:#fff;border:1px solid #cfe8d6}
+.n.key .val{font-size:46px;color:var(--verde)}
+.barra{height:8px;border-radius:5px;background:#eef1ef;overflow:hidden;margin-top:12px;display:flex}
+.barra div{height:100%}
+
+/* ---- time de apoio ---- */
+.sec{font-size:16px;font-weight:600;margin:26px 0 12px;display:flex;align-items:center;gap:9px}
+.sec small{font-weight:400;font-size:13px;color:var(--mut)}
+.time{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.ag{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:14px 15px;display:flex;gap:11px;align-items:flex-start}
+.ag .ic{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;flex:none}
+.ag .ic svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ag h4{font-size:14px;font-weight:600;margin-bottom:2px}
+.ag p{font-size:12px;color:var(--mut);line-height:1.45}
+.ag .st{font-size:11.5px;margin-top:6px;display:inline-flex;align-items:center;gap:5px;color:var(--lima);font-weight:500}
+.ag .st i{width:6px;height:6px;border-radius:50%;background:var(--lima);display:block}
+
+/* ---- conversas ---- */
+.duo{display:grid;grid-template-columns:1.6fr 1fr;gap:14px;margin-top:12px}
+.cx{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:18px 20px}
+.cx h3{font-size:15px;font-weight:600}
+.cx .sub{font-size:12.5px;color:var(--mut);margin:2px 0 14px}
+.lin{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--bd);font-size:14px}
+.lin:first-of-type{border-top:0}
+.lin i{width:10px;height:10px;border-radius:3px;flex:none}
+.lin b{margin-left:auto;font-weight:600}
+.lin em{font-style:normal;color:var(--mut);font-size:12.5px;width:46px;text-align:right}
+svg.ch{width:100%;height:auto;display:block}
+svg.ch text{fill:#8a929a;font-size:11px;font-family:inherit}
+.leg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--mut);margin-top:10px}
+.leg span{display:flex;align-items:center;gap:6px}
+.leg i{width:10px;height:10px;border-radius:3px}
+@media(max-width:900px){.fatia{grid-template-columns:repeat(2,1fr)}.duo{grid-template-columns:1fr}.hero .in{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body>
+
+<div class="bar"><div class="in">
+  <b>Meu Patrimônio</b> · Painel Patrícia
+  <span class="r"><span>marketing@meupatrimonio.com</span><button>Sair</button></span>
+</div></div>
+
+<div class="hero"><div class="in">
+  <div class="av">
+    <svg viewBox="0 0 120 120" aria-label="Patrícia">
+      <defs><clipPath id="cl"><circle cx="60" cy="60" r="60"/></clipPath></defs>
+      <circle cx="60" cy="60" r="60" fill="#e8f6ea"/>
+      <g clip-path="url(#cl)">
+        <path d="M60 74c-23 0-36 15-38 38h76c-2-23-15-38-38-38z" fill="#00503c"/>
+        <path d="M51 76l9 12 9-12-5-4h-8z" fill="#f4f7f4"/>
+        <rect x="52" y="60" width="16" height="18" rx="7" fill="#e3ab85"/>
+        <path d="M29 55c0-20 14-33 31-33s31 13 31 33v15c0 7-5 9-7 4l-2-22H38l-2 22c-2 5-7 3-7-4z" fill="#3b2b22"/>
+        <ellipse cx="60" cy="49" rx="20" ry="23" fill="#f3c9a4"/>
+        <path d="M40 45c0-17 9-25 20-25s20 8 20 25c-6-11-12-14-20-14s-14 3-20 14z" fill="#3b2b22"/>
+        <circle cx="52.5" cy="49" r="2.3" fill="#2b2b2b"/><circle cx="67.5" cy="49" r="2.3" fill="#2b2b2b"/>
+        <path d="M53 58q7 6 14 0" stroke="#bd7d55" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M36 50v-4a24 24 0 0 1 48 0v4" stroke="#00a611" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+        <rect x="31" y="48" width="8" height="13" rx="4" fill="#00a611"/>
+        <rect x="81" y="48" width="8" height="13" rx="4" fill="#00a611"/>
+      </g>
+    </svg>
+    <span class="on"></span>
+  </div>
+  <div>
+    <div class="hname">Patrícia</div>
+    <div class="hsub">Atende os leads no WhatsApp da Meu Patrimônio: entende o momento de cada um e passa para um consultor quem tem perfil.</div>
+    <div class="hora">
+      <span class="chip">Agora: <b>3 conversas abertas</b></span>
+      <span class="chip">Última resposta <b>há 2 min</b></span>
+      <span class="chip">Hoje até <b>20h</b></span>
+    </div>
+  </div>
+</div></div>
+
+<div class="wrap">
+  <div class="fatia">
+    <div class="n key">
+      <div class="lab">Taxa de requalificação</div>
+      <div class="val">41,5%</div>
+      <div class="pe">54 de 130 conversas decididas</div>
+      <div class="barra"><div style="width:41.5%;background:var(--req)"></div><div style="width:58.5%;background:var(--fora)"></div></div>
+    </div>
+    <div class="n"><div class="lab">Conversas</div><div class="val">190</div><div class="pe">nos últimos 30 dias</div></div>
+    <div class="n"><div class="lab"><i style="background:var(--req)"></i>Requalificados</div><div class="val">54</div><div class="pe">foram para um consultor</div></div>
+    <div class="n"><div class="lab"><i style="background:var(--fora)"></i>Fora do perfil</div><div class="val">76</div><div class="pe">Base de Relacionamento</div></div>
+  </div>
+
+  <div class="sec">Quem cuida da Patrícia <small>os agentes que vigiam, corrigem e ensinam</small></div>
+  <div class="time">
+    <div class="ag"><div class="ic" style="background:#3b6fd8"><svg viewBox="0 0 24 24"><path d="M3 17l5-6 4 4 5-8 4 5"/></svg></div>
+      <div><h4>Monitor</h4><p>Confere a cada 10 min se ela respondeu certo e avisa a equipe.</p><span class="st"><i></i>rodou há 4 min</span></div></div>
+    <div class="ag"><div class="ic" style="background:#8b5cf6"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <div><h4>Validador</h4><p>A cada 30 min confere se o Monitor fez o trabalho dele.</p><span class="st"><i></i>rodou há 11 min</span></div></div>
+    <div class="ag"><div class="ic" style="background:#e0a43a"><svg viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0-3 11v3h6v-3a6 6 0 0 0-3-11z"/><path d="M10 21h4"/></svg></div>
+      <div><h4>Cérebro</h4><p>Guarda o que a empresa sabe e o que ela aprendeu nas conversas.</p><span class="st"><i></i>rodou há 7 min</span></div></div>
+    <div class="ag"><div class="ic" style="background:#0f9f9a"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg></div>
+      <div><h4>Verificador</h4><p>Revisa conversas paradas há mais de 24 h e separa por assunto.</p><span class="st"><i></i>rodou há 19 min</span></div></div>
+  </div>
+
+  <div class="sec">Como foi o período</div>
+  <div class="duo">
+    <div class="cx">
+      <h3>Conversas por dia</h3><div class="sub">Pelo dia em que a conversa começou, colorida pelo resultado</div>
+      <svg class="ch" viewBox="0 0 640 210">
+        <g>
+          <line x1="28" x2="640" y1="20" y2="20" stroke="#eef0ee"/><text x="22" y="24" text-anchor="end">12</text>
+          <line x1="28" x2="640" y1="70" y2="70" stroke="#eef0ee"/><text x="22" y="74" text-anchor="end">8</text>
+          <line x1="28" x2="640" y1="120" y2="120" stroke="#eef0ee"/><text x="22" y="124" text-anchor="end">4</text>
+          <line x1="28" x2="640" y1="170" y2="170" stroke="#eef0ee"/><text x="22" y="174" text-anchor="end">0</text>
+        </g>
+        <g id="barras"></g>
+      </svg>
+      <div class="leg">
+        <span><i style="background:var(--req)"></i>Requalificados</span><span><i style="background:var(--fora)"></i>Fora do perfil</span>
+        <span><i style="background:var(--sem)"></i>Sem interesse</span><span><i style="background:var(--eq)"></i>Passaram para a equipe</span>
+        <span><i style="background:var(--ind)"></i>Indique e Ganhe</span><span><i style="background:var(--and)"></i>Em andamento</span>
+      </div>
+    </div>
+    <div class="cx">
+      <h3>Resultado das conversas</h3><div class="sub">190 conversas no período</div>
+      <div class="barra" style="height:14px;margin-bottom:14px">
+        <div style="width:28%;background:var(--req)"></div><div style="width:40%;background:var(--fora)"></div>
+        <div style="width:7%;background:var(--sem)"></div><div style="width:9%;background:var(--eq)"></div>
+        <div style="width:6%;background:var(--ind)"></div><div style="width:10%;background:var(--and)"></div>
+      </div>
+      <div class="lin"><i style="background:var(--req)"></i>Requalificados<b>54</b><em>28%</em></div>
+      <div class="lin"><i style="background:var(--fora)"></i>Fora do perfil<b>76</b><em>40%</em></div>
+      <div class="lin"><i style="background:var(--sem)"></i>Sem interesse<b>13</b><em>7%</em></div>
+      <div class="lin"><i style="background:var(--eq)"></i>Passaram para a equipe<b>17</b><em>9%</em></div>
+      <div class="lin"><i style="background:var(--ind)"></i>Indique e Ganhe<b>11</b><em>6%</em></div>
+      <div class="lin"><i style="background:var(--and)"></i>Em andamento<b>19</b><em>10%</em></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const alt=[7,9,5,11,6,8,4,10,7,5,9,6,8,11,5,7,9,4,6,10,8,5,7,9,6,4,8,10,7,6];
+const cores=['var(--req)','var(--fora)','var(--sem)','var(--eq)','var(--ind)','var(--and)'];
+const pes=[.28,.40,.07,.09,.06,.10];
+let s='';
+alt.forEach((v,i)=>{
+  const x=30+i*20.3, bw=13; let ac=0;
+  pes.forEach((p,k)=>{ const h=(v*p)*12.5; if(h<1)return;
+    s+=`<rect x="${x}" y="${170-ac-h}" width="${bw}" height="${h}" fill="${cores[k]}" rx="2"/>`; ac+=h; });
+});
+document.getElementById('barras').innerHTML=s;
+</script>
+</body>
+</html>

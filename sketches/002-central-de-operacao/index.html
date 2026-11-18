@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>B · Central de operação</title>
+<style>
+@font-face{font-family:'Campton';src:url(../../assets/CamptonBook.otf) format('opentype');font-weight:400}
+@font-face{font-family:'Campton';src:url(../../assets/CamptonMedium.otf) format('opentype');font-weight:500}
+@font-face{font-family:'Campton';src:url(../../assets/CamptonSemiBold.otf) format('opentype');font-weight:600}
+:root{
+  --verde:#00503c;--prof:#003326;--lima:#00a611;
+  --fg:#15191c;--mut:#737d85;--bd:#e2e6e4;--bg:#eef1ef;--card:#fff;
+  --req:#00a611;--fora:#9aa3ab;--sem:#e0a43a;--eq:#3b6fd8;--ind:#7a5cc4;--and:#c9ead0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Campton',system-ui,'Segoe UI',sans-serif;color:var(--fg);background:var(--bg);-webkit-font-smoothing:antialiased;line-height:1.45;font-size:14px}
+.wrap{max-width:1320px;margin:0 auto;padding:14px 16px 40px}
+
+/* topo operacional: tudo num respiro só */
+.top{background:var(--prof);color:#fff}
+.top .in{max-width:1320px;margin:0 auto;padding:11px 16px;display:flex;align-items:center;gap:14px}
+.mono{width:36px;height:36px;border-radius:9px;background:linear-gradient(140deg,#0b6b4f,#00503c);display:grid;place-items:center;
+  font-weight:600;font-size:17px;flex:none;position:relative;border:1px solid rgba(255,255,255,.14)}
+.mono span{position:absolute;right:-3px;bottom:-3px;width:11px;height:11px;border-radius:50%;background:#61ce70;border:2px solid var(--prof)}
+.tt{font-weight:600;font-size:15px;letter-spacing:.1px}
+.tt small{display:block;font-weight:400;font-size:11.5px;color:rgba(255,255,255,.55)}
+.sem{margin-left:auto;display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.sg{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);
+  border-radius:7px;padding:4px 9px;font-size:11.5px;color:rgba(255,255,255,.82)}
+.sg i{width:6px;height:6px;border-radius:50%;background:#61ce70;display:block}
+.sg.w i{background:#f0b429}
+
+/* faixa de filtros */
+.fl{background:var(--card);border-bottom:1px solid var(--bd)}
+.fl .in{max-width:1320px;margin:0 auto;padding:9px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.seg{display:inline-flex;background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:2px}
+.seg button{font:inherit;font-size:12.5px;border:0;background:transparent;border-radius:6px;padding:5px 10px;cursor:pointer;color:var(--mut)}
+.seg button.on{background:#fff;color:var(--fg);font-weight:500;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.fl .lb{font-size:11.5px;color:var(--mut);text-transform:none;margin-right:2px}
+
+/* métricas densas numa régua só */
+.regua{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));background:var(--card);border:1px solid var(--bd);
+  border-radius:10px;overflow:hidden;margin:14px 0}
+.m{padding:12px 14px;border-left:1px solid var(--bd)}
+.m:first-child{border-left:0}
+.m .l{font-size:11.5px;color:var(--mut);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.m .l i{width:8px;height:8px;border-radius:2px;flex:none}
+.m .v{font-size:25px;font-weight:600;line-height:1.1;margin-top:4px}
+.m.big{background:linear-gradient(135deg,var(--verde),var(--prof));color:#fff;grid-column:span 2}
+.m.big .l{color:rgba(255,255,255,.7)}
+.m.big .v{font-size:34px}
+.m.big .d{font-size:11.5px;color:rgba(255,255,255,.65);margin-top:3px}
+
+.cols{display:grid;grid-template-columns:1.5fr 1fr;gap:12px}
+.bx{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:14px 16px}
+.bx h3{font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:8px}
+.bx h3 span{margin-left:auto;font-weight:400;font-size:11.5px;color:var(--mut)}
+.bx .sb{font-size:11.5px;color:var(--mut);margin:2px 0 12px}
+svg.ch{width:100%;height:auto;display:block}
+svg.ch text{fill:#99a1a8;font-size:10px;font-family:inherit}
+.leg{display:flex;flex-wrap:wrap;gap:5px 13px;font-size:11.5px;color:var(--mut);margin-top:9px}
+.leg span{display:flex;align-items:center;gap:5px}.leg i{width:9px;height:9px;border-radius:2px}
+.rw{display:flex;align-items:center;gap:9px;padding:7px 0;border-top:1px solid var(--bd);font-size:13px}
+.rw:first-of-type{border-top:0}
+.rw i{width:9px;height:9px;border-radius:2px;flex:none}
+.rw b{margin-left:auto;font-weight:600}.rw em{font-style:normal;color:var(--mut);font-size:11.5px;width:42px;text-align:right}
+
+/* tabela operacional */
+table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+th{text-align:left;font-weight:500;font-size:11.5px;color:var(--mut);padding:7px 10px;border-bottom:1px solid var(--bd);background:#f8faf9}
+td{padding:8px 10px;border-bottom:1px solid var(--bd)}
+tr:hover td{background:#f8faf9}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;padding:2px 8px;border-radius:999px;background:#eef1ef;color:#49525a}
+.tag i{width:7px;height:7px;border-radius:50%}
+.lk{color:var(--verde);font-weight:500;text-decoration:none;font-size:12.5px}
+.lk:hover{text-decoration:underline}
+@media(max-width:1100px){.regua{grid-template-columns:repeat(4,1fr)}.m.big{grid-column:span 4}.cols{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="top"><div class="in">
+  <div class="mono">P<span></span></div>
+  <div class="tt">Patrícia · operação<small>WhatsApp Meu Patrimônio · +55 27 99273-4520</small></div>
+  <div class="sem">
+    <span class="sg"><i></i>Patrícia 1 min</span>
+    <span class="sg"><i></i>Monitor 4 min</span>
+    <span class="sg"><i></i>Validador 11 min</span>
+    <span class="sg"><i></i>Cérebro 7 min</span>
+    <span class="sg w"><i></i>Verificador 19 min</span>
+    <span class="sg"><i></i>MP PRO 2 min</span>
+  </div>
+</div></div>
+
+<div class="fl"><div class="in">
+  <span class="lb">Período</span>
+  <div class="seg"><button>Hoje</button><button>7 dias</button><button class="on">30 dias</button><button>Este mês</button><button>Tudo</button></div>
+  <span class="lb">Origem</span>
+  <div class="seg"><button class="on">Todas</button><button>LP Diagnóstico</button><button>Botão do site</button><button>Indique e Ganhe</button></div>
+  <span class="lb" style="margin-left:auto">19/10 a 18/11 · atualizado há 2 min</span>
+</div></div>
+
+<div class="wrap">
+  <div class="regua">
+    <div class="m big"><div class="l">Taxa de requalificação</div><div class="v">41,5%</div><div class="d">54 de 130 decididas</div></div>
+    <div class="m"><div class="l">Conversas</div><div class="v">190</div></div>
+    <div class="m"><div class="l"><i style="background:var(--req)"></i>Requalif.</div><div class="v">54</div></div>
+    <div class="m"><div class="l"><i style="background:var(--fora)"></i>Fora perfil</div><div class="v">76</div></div>
+    <div class="m"><div class="l"><i style="background:var(--and)"></i>Em curso</div><div class="v">19</div></div>
+    <div class="m"><div class="l"><i style="background:var(--eq)"></i>P/ equipe</div><div class="v">17</div></div>
+    <div class="m"><div class="l">Abandonos</div><div class="v">34</div></div>
+  </div>
+
+  <div class="cols">
+    <div class="bx">
+      <h3>Conversas por dia <span>últimos 30 dias</span></h3>
+      <div class="sb">Empilhado pelo resultado atual de cada conversa</div>
+      <svg class="ch" viewBox="0 0 640 180">
+        <line x1="26" x2="640" y1="16" y2="16" stroke="#eef0ee"/><text x="20" y="20" text-anchor="end">12</text>
+        <line x1="26" x2="640" y1="58" y2="58" stroke="#eef0ee"/><text x="20" y="62" text-anchor="end">8</text>
+        <line x1="26" x2="640" y1="100" y2="100" stroke="#eef0ee"/><text x="20" y="104" text-anchor="end">4</text>
+        <line x1="26" x2="640" y1="142" y2="142" stroke="#eef0ee"/><text x="20" y="146" text-anchor="end">0</text>
+        <g id="barras"></g>
+      </svg>
+      <div class="leg">
+        <span><i style="background:var(--req)"></i>Requalificados</span><span><i style="background:var(--fora)"></i>Fora do perfil</span>
+        <span><i style="background:var(--sem)"></i>Sem interesse</span><span><i style="background:var(--eq)"></i>Equipe</span>
+        <span><i style="background:var(--ind)"></i>Indique e Ganhe</span><span><i style="background:var(--and)"></i>Em andamento</span>
+      </div>
+    </div>
+    <div class="bx">
+      <h3>Distribuição</h3><div class="sb">190 conversas</div>
+      <div style="display:flex;height:12px;border-radius:6px;overflow:hidden;background:var(--bg);margin-bottom:12px">
+        <div style="width:28%;background:var(--req)"></div><div style="width:40%;background:var(--fora)"></div>
+        <div style="width:7%;background:var(--sem)"></div><div style="width:9%;background:var(--eq)"></div>
+        <div style="width:6%;background:var(--ind)"></div><div style="width:10%;background:var(--and)"></div>
+      </div>
+      <div class="rw"><i style="background:var(--req)"></i>Requalificados<b>54</b><em>28%</em></div>
+      <div class="rw"><i style="background:var(--fora)"></i>Fora do perfil<b>76</b><em>40%</em></div>
+      <div class="rw"><i style="background:var(--sem)"></i>Sem interesse<b>13</b><em>7%</em></div>
+      <div class="rw"><i style="background:var(--eq)"></i>Passaram p/ equipe<b>17</b><em>9%</em></div>
+      <div class="rw"><i style="background:var(--ind)"></i>Indique e Ganhe<b>11</b><em>6%</em></div>
+      <div class="rw"><i style="background:var(--and)"></i>Em andamento<b>19</b><em>10%</em></div>
+    </div>
+  </div>
+
+  <div class="bx" style="margin-top:12px">
+    <h3>Conversas recentes <span>atualiza sozinho a cada 2 min</span></h3>
+    <table>
+      <thead><tr><th>Lead</th><th>WhatsApp</th><th>Origem</th><th>Começou</th><th>Situação</th><th>Resultado</th><th></th></tr></thead>
+      <tbody>
+        <tr><td>Everton Souza</td><td>+55 27 99812-4471</td><td>LP Diagnóstico</td><td>hoje 09:12</td><td><span class="tag"><i style="background:var(--and)"></i>conversando</span></td><td>—</td><td><a class="lk" href="#">Ver conversa</a></td></tr>
+        <tr><td>Loura Pedrosa</td><td>+55 11 98820-7733</td><td>LP Diagnóstico</td><td>hoje 08:41</td><td><span class="tag"><i style="background:var(--req)"></i>decidida</span></td><td>Requalificada</td><td><a class="lk" href="#">Ver conversa</a></td></tr>
+        <tr><td>Ricardo Alencar</td><td>+55 21 99145-2290</td><td>Botão do site</td><td>ontem 17:55</td><td><span class="tag"><i style="background:var(--fora)"></i>decidida</span></td><td>Fora do perfil</td><td><a class="lk" href="#">Ver conversa</a></td></tr>
+        <tr><td>Ryan Alves</td><td>+55 31 98477-1182</td><td>Indique e Ganhe</td><td>ontem 15:20</td><td><span class="tag"><i style="background:var(--ind)"></i>orientado</span></td><td>Indicação</td><td><a class="lk" href="#">Ver conversa</a></td></tr>
+        <tr><td>Carla Menezes</td><td>+55 27 99630-8841</td><td>LP Diagnóstico</td><td>ontem 11:03</td><td><span class="tag"><i style="background:var(--eq)"></i>com a equipe</span></td><td>Victor Carvalho</td><td><a class="lk" href="#">Ver conversa</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const alt=[7,9,5,11,6,8,4,10,7,5,9,6,8,11,5,7,9,4,6,10,8,5,7,9,6,4,8,10,7,6];
+const cores=['var(--req)','var(--fora)','var(--sem)','var(--eq)','var(--ind)','var(--and)'];
+const pes=[.28,.40,.07,.09,.06,.10];
+let s='';
+alt.forEach((v,i)=>{const x=29+i*20.4,bw=14;let ac=0;
+  pes.forEach((p,k)=>{const h=(v*p)*10.5;if(h<1)return;
+    s+=`<rect x="${x}" y="${142-ac-h}" width="${bw}" height="${h}" fill="${cores[k]}" rx="1.5"/>`;ac+=h;});});
+document.getElementById('barras').innerHTML=s;
+document.querySelectorAll('.seg').forEach(g=>g.addEventListener('click',e=>{
+  if(e.target.tagName!=='BUTTON')return;
+  g.querySelectorAll('button').forEach(b=>b.classList.remove('on'));e.target.classList.add('on');}));
+</script>
+</body>
+</html>
