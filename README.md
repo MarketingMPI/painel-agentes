@@ -11,8 +11,15 @@ Painel para acompanhar os agentes de IA da Meu Patrimônio. Hoje mostra a **Patr
 - A tabela não tem dado pessoal: só o id da conversa no Pipedrive, a origem (LP ou site), o modo (normal, lembrete, abandono), o status e o horário.
 - SQL, carga do histórico e fluxos: pasta `Automações/Bot Requalificação WhatsApp/` (arquivo `supabase/painel_agentes.sql`).
 
-## Escritório dos agentes
-Cena 2D no topo com os 5 agentes (Patrícia, Monitor, Validador, Cérebro e Verificador): trabalhando, de plantão, dormindo (fora do horário), com erro, atrasado ou desligado.
+## Escritório (aba própria)
+Tela separada, pelo botão **Escritório** no topo (ou `#escritorio` na URL). Cena 2D ao vivo com o **Cérebro** —
+uma esfera de energia animada no andar de cima — e, embaixo, os três que trabalham: **Patrícia**, **Monitor** e **Validador**.
+Cada um mostra o estado: trabalhando, de plantão, dormindo (fora do horário), atrasado ou com erro.
+
+**A Patrícia é um robô só no desenho, mas são três fluxos no n8n** (Atendente, MP PRO e Verificador). `dadosDe()` em
+`escritorio.js` consolida os três: basta um falhar, atrasar ou sair do ar para ela acender alerta, e `erros_24h` é a soma.
+Não apague fonte dessa lista sem mover o monitoramento para outro lugar — o fluxo continua rodando mesmo sem aparecer na tela.
+
 - Dados: função `public.agentes_status()`, alimentada a cada minuto pelo fluxo do n8n "[AGENTES] Painel - Status dos agentes" (`build_status.py`).
 - Código: `escritorio.js` e `escritorio.css`.
 

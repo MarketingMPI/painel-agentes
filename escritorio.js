@@ -3,18 +3,35 @@
 'use strict';
 const AG = [
   {id: 'cerebro', nome: 'Cérebro', funcao: 'Central: guarda o que a empresa sabe e o que a Patrícia aprendeu nas conversas, e alimenta os outros agentes.',
-   cor: '#e0a43a', escuro: '#b57f1d', int: 15, ini: 8 * 60, fim: 21 * 60 + 30, tela: 'ideia', espera: 'Esperando conversas novas'},
-  {id: 'atendente', nome: 'Patrícia', funcao: 'Conversa com os leads no WhatsApp e decide quem vai para o consultor.',
+   cor: '#2fd4c4', escuro: '#0f8f86', int: 15, ini: 8 * 60, fim: 21 * 60 + 30, tela: 'ideia', espera: 'Esperando conversas novas'},
+  {id: 'patricia', nome: 'Patrícia', fontes: ['atendente', 'mppro', 'verificador'],
+   funcao: 'Conversa com os leads no WhatsApp, atende quem pergunta do MP PRO e revisa as conversas paradas.',
    cor: '#16a34a', escuro: '#0f7a35', int: 1, ini: 8 * 60, fim: 20 * 60 - 1, tela: 'chat', espera: 'Esperando mensagem de lead'},
   {id: 'monitor', nome: 'Monitor', funcao: 'Vigia a Patrícia a cada 10 minutos e avisa a equipe se algo der errado.',
    cor: '#3b6fd8', escuro: '#2a52a6', int: 10, ini: 8 * 60, fim: 20 * 60 + 40, tela: 'grafico', espera: 'De olho na Patrícia'},
   {id: 'validador', nome: 'Validador', funcao: 'Confere a cada 30 minutos se o Monitor está fazendo o trabalho direito.',
    cor: '#8b5cf6', escuro: '#6a3fd0', int: 30, ini: 8 * 60 + 10, fim: 21 * 60, tela: 'check', espera: 'De olho no Monitor'},
-  {id: 'verificador', nome: 'Verificador', funcao: 'Revisa as conversas paradas há mais de 24 h, confere o Pipedrive e separa por assunto.',
-   cor: '#0f9f9a', escuro: '#0b7a76', int: 30, ini: 7 * 60, fim: 22 * 60, tela: 'lista', espera: 'Esperando a próxima ronda'},
-  {id: 'mppro', nome: 'Patrícia · MP PRO', funcao: 'Atende quem fala do MP PRO no WhatsApp: tira dúvidas, manda o link e passa aluno com problema para a equipe.',
-   cor: '#d9c795', escuro: '#3a3229', int: 1, ini: 8 * 60, fim: 20 * 60 - 1, tela: 'pro', espera: 'Esperando mensagem sobre o MP PRO'},
 ];
+
+/* A Patrícia é um robô só no desenho, mas são três fluxos no n8n (Atendente, MP PRO e Verificador).
+   Consolida os três num estado único: basta um falhar para ela acender alerta. */
+function dadosDe(a, ags) {
+  if (!a.fontes) return ags.find(x => x.id === a.id);
+  const ds = a.fontes.map(id => ags.find(x => x.id === id)).filter(Boolean);
+  if (!ds.length) return null;
+  const recente = k => ds.map(d => d[k]).filter(Boolean).sort((p, q) => t(q.em) - t(p.em))[0] || null;
+  const comErro = ds.find(d => d.ultima && d.ultima.status === 'error');
+  return {
+    ativo: ds.some(d => d.ativo),
+    rodando: ds.some(d => d.rodando),
+    atualizado_em: ds.map(d => d.atualizado_em).filter(Boolean).sort().slice(-1)[0],
+    falha_leitura: ds.some(d => d.falha_leitura),
+    ultima: comErro ? comErro.ultima : recente('ultima'),
+    trabalho: recente('trabalho'),
+    erros_24h: ds.reduce((s, d) => s + (d.erros_24h || 0), 0),
+    _fontes: ds.length
+  };
+}
 const ROT = {trab: 'Trabalhando', plantao: 'De plantão', dorme: 'Dormindo', erro: 'Com erro', atraso: 'Atrasado', off: 'Desligado'};
 
 /* Cartões "Quem cuida da Patrícia": só os agentes de apoio, com a última rodada de cada um. */
@@ -24,12 +41,12 @@ const QC_IC = {
   cerebro: '<path d="M12 3a6 6 0 0 0-3 11v3h6v-3a6 6 0 0 0-3-11z"/><path d="M10 21h4"/>',
   verificador: '<path d="M4 6h16M4 12h16M4 18h10"/>'
 };
-const QC_ORDEM = ['monitor', 'validador', 'cerebro', 'verificador'];
+const QC_ORDEM = ['monitor', 'validador', 'cerebro'];
 function quemCuida(ags, est) {
   const box = document.getElementById('quem-cuida'); if (!box) return;
   box.innerHTML = QC_ORDEM.map(id => {
     const i = AG.findIndex(a => a.id === id); if (i < 0) return '';
-    const a = AG[i], d = ags.find(x => x.id === id) || {}, e = est[i] || {};
+    const a = AG[i], d = dadosDe(a, ags) || {}, e = est[i] || {};
     const ruim = e.k === 'erro' || e.k === 'atraso' || e.k === 'off';
     const cls = ruim ? (e.k === 'erro' ? 'qc-e' : 'qc-w') : 'qc-ok';
     const quando = d.ultima ? 'rodou ' + ha(d.ultima.em) : (ROT[e.k] || '—');
@@ -40,9 +57,10 @@ function quemCuida(ags, est) {
 }
 const OLHO = {trab: '#7CFFB2', plantao: '#9fd8ff', erro: '#ff6b5e', atraso: '#ffc861', off: '#8a929a', dorme: '#8a929a'};
 const TZ = 'America/Sao_Paulo';
-const W = 1250, Y0 = -22, H = 642, ANDAR = 320;          // cena com dois andares
+const W = 860, Y0 = -78, H = 698, ANDAR = 320;           // cena com dois andares
 const NB = AG.length - 1;   // agentes do andar de baixo
-const POS = AG.map((a, i) => i === 0 ? {x: 625, y: 0} : {x: (i - 1) * (W / NB) + W / NB / 2, y: ANDAR});
+const CX = W / 2;           // eixo central (orbe do Cérebro)
+const POS = AG.map((a, i) => i === 0 ? {x: CX, y: 0} : {x: (i - 1) * (W / NB) + W / NB / 2, y: ANDAR});
 let ST = null, ASSIN = '', TIMER = null, TICK = null, LENDO = false;
 
 const t = iso => iso ? new Date(iso).getTime() : 0;
@@ -120,7 +138,7 @@ function robo(a, k, i, cx, oy) {
     : `<g class="olhos"><circle cx="101" cy="114" r="5" fill="${olho}"/><circle cx="119" cy="114" r="5" fill="${olho}"/></g>`;
   const boca = k === 'erro' ? `<path d="M104 125 q6 -4 12 0" stroke="${olho}" stroke-width="2" fill="none" stroke-linecap="round"/>`
     : k === 'trab' || k === 'plantao' ? `<path d="M104 123 q6 4 12 0" stroke="${olho}" stroke-width="2" fill="none" stroke-linecap="round"/>` : '';
-  const acess = a.id === 'atendente' ? `<path d="M80 112 q0 -30 30 -30 q30 0 30 30" stroke="#24302b" stroke-width="3.5" fill="none"/><rect x="76" y="106" width="8" height="15" rx="4" fill="#24302b"/><rect x="136" y="106" width="8" height="15" rx="4" fill="#24302b"/><path d="M80 120 q4 12 18 12" stroke="#24302b" stroke-width="2.5" fill="none"/><circle cx="99" cy="132" r="2.6" fill="#24302b"/>`
+  const acess = a.id === 'patricia' ? `<path d="M76 128 q-2 -46 34 -46 q36 0 34 46 q-7 3 -9 -4 q1 -28 -25 -28 q-26 0 -25 28 q-2 7 -9 4z" fill="#c4622d"/><path d="M85 101 q9 -15 25 -15 q16 0 25 15 q-13 -7 -25 -5 q-12 -2 -25 5z" fill="#b2561f"/><path d="M80 112 q0 -30 30 -30 q30 0 30 30" stroke="#24302b" stroke-width="3.5" fill="none"/><rect x="76" y="106" width="8" height="15" rx="4" fill="#24302b"/><rect x="136" y="106" width="8" height="15" rx="4" fill="#24302b"/><path d="M80 120 q4 12 18 12" stroke="#24302b" stroke-width="2.5" fill="none"/><circle cx="99" cy="132" r="2.6" fill="#24302b"/>`
     : a.id === 'monitor' ? `<circle cx="134" cy="96" r="7" fill="none" stroke="#24302b" stroke-width="2.5"/><path d="M139 101 l5 5" stroke="#24302b" stroke-width="3" stroke-linecap="round"/>`
     : a.id === 'validador' ? `<rect x="134" y="152" width="16" height="20" rx="2" fill="#f4f1ff" stroke="#24302b" stroke-width="1.5"/><path d="M138 160 h8 M138 165 h6" stroke="#8b5cf6" stroke-width="1.6"/>`
     : a.id === 'verificador' ? `<circle cx="101" cy="114" r="8" fill="none" stroke="#e8ecef" stroke-width="2.2"/><circle cx="119" cy="114" r="8" fill="none" stroke="#e8ecef" stroke-width="2.2"/><path d="M109 114 h2" stroke="#e8ecef" stroke-width="2.2"/>`
@@ -135,7 +153,7 @@ function robo(a, k, i, cx, oy) {
         <rect x="82" y="92" width="56" height="46" rx="16" fill="${a.cor}"/>
         <rect x="88" y="100" width="44" height="30" rx="10" fill="#0f1a17"/>
         ${olhos}${boca}
-        ${a.id === 'atendente' || a.id === 'cerebro' || a.id === 'verificador' ? acess : ''}
+        ${a.id === 'patricia' ? acess : ''}
       </g>
       <rect x="86" y="140" width="48" height="50" rx="13" fill="${a.escuro}"/>
       ${a.id === 'mppro' ? '<rect x="94" y="151" width="32" height="14" rx="7" fill="#12100c"/><text x="110" y="161.5" text-anchor="middle" font-size="8.5" font-weight="700" letter-spacing=".06em" fill="#e4d6a7">PRO</text>'
@@ -151,7 +169,6 @@ function robo(a, k, i, cx, oy) {
     <rect x="10" y="188" width="200" height="12" rx="3" fill="#caa47c"/>
     <rect x="20" y="200" width="180" height="78" rx="3" fill="#b38b63"/>
     <rect x="30" y="212" width="160" height="2" fill="#a07a54"/>
-    ${a.id === 'cerebro' ? '<rect x="58" y="228" width="104" height="26" rx="4" fill="#00503c"/><text x="110" y="245" text-anchor="middle" font-size="11" font-weight="700" letter-spacing=".08em" fill="#fff">CENTRAL</text>' : ''}
     <rect x="22" y="278" width="10" height="12" fill="#8f6c49"/><rect x="188" y="278" width="10" height="12" fill="#8f6c49"/>
     <rect x="84" y="182" width="50" height="7" rx="2" fill="#e8ecef"/>
     <rect x="166" y="160" width="7" height="28" fill="#4b5560"/><rect x="156" y="184" width="27" height="5" rx="2" fill="#4b5560"/>
@@ -160,6 +177,62 @@ function robo(a, k, i, cx, oy) {
     ${tela(a, k, i)}
     <rect x="34" y="170" width="16" height="18" rx="3" fill="#fff" stroke="#c9d1cc"/><path d="M50 175 q7 0 7 6 q0 6 -7 6" fill="none" stroke="#c9d1cc" stroke-width="2"/>
     ${k === 'trab' ? '<path class="vapor" d="M39 166 q-3 -5 0 -9" stroke="#b9c2bd" stroke-width="2" fill="none" stroke-linecap="round"/><path class="vapor vapor2" d="M45 166 q3 -5 0 -9" stroke="#b9c2bd" stroke-width="2" fill="none" stroke-linecap="round"/>' : ''}
+  </g></g>`;
+}
+/* O Cérebro não é um robô: é uma esfera de energia girando sobre um pedestal. */
+function cascaD(raio, ondas, amp, fase) {   // centrada em (0,0): o grupo de fora posiciona
+  const N = 64; let d = '';
+  for (let i = 0; i <= N; i++) {
+    const ang = (i / N) * Math.PI * 2, r = raio + Math.sin(ang * ondas + fase) * amp;
+    d += (i ? 'L' : 'M') + (Math.cos(ang) * r).toFixed(1) + ' ' + (Math.sin(ang) * r * .92).toFixed(1);
+  }
+  return d + 'Z';
+}
+function orbe(a, k, cx) {
+  const CY = 136, R = 84, parado = k === 'off' || k === 'dorme';
+  const vel = k === 'trab' ? 1 : k === 'erro' ? .8 : parado ? 0 : .5;
+  const dur = s => (s / (vel || .001)).toFixed(1) + 's';
+  const cor = k === 'erro' ? '#ff8a7a' : k === 'atraso' ? '#ffc861' : parado ? '#7f9b97' : '#4fe3d2';
+  const claro = k === 'erro' ? '#ffd9d3' : k === 'atraso' ? '#ffe3b0' : parado ? '#cfdedc' : '#bffff5';
+  const op = parado ? .45 : 1;
+  // a membrana gira devagar no próprio eixo, como na referência
+  // núcleo: esfera de pontos
+  let nuc = '';
+  for (let r = 0; r <= 4; r++) {
+    const n = r === 0 ? 1 : r * 6, rad = r * 7;
+    for (let i = 0; i < n; i++) {
+      const ang = (i / n) * Math.PI * 2 + r * .4;
+      nuc += `<circle cx="${(110 + Math.cos(ang) * rad).toFixed(1)}" cy="${(CY + Math.sin(ang) * rad * .82).toFixed(1)}" r="${r === 0 ? 2.6 : 1.7}" fill="${claro}" opacity="${(1 - r * .13).toFixed(2)}"/>`;
+    }
+  }
+  // faíscas subindo dentro da esfera
+  let faisca = '';
+  if (vel) for (let i = 0; i < 4; i++) {
+    const x = 110 + [-38, -14, 16, 40][i], d = (3.2 + i * .7) / (vel || 1);
+    faisca += `<circle cx="${x}" cy="${CY + 40}" r="${1.6 + (i % 2) * .6}" fill="${claro}" opacity="0">
+      <animate attributeName="cy" from="${CY + 44}" to="${CY - 44}" dur="${d.toFixed(1)}s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;.85;.85;0" dur="${d.toFixed(1)}s" repeatCount="indefinite"/></circle>`;
+  }
+  return `<g transform="translate(${cx - 110},0)"><g class="orbe ${k}">
+    <ellipse cx="110" cy="292" rx="74" ry="8" fill="#000" opacity=".08"/>
+    <ellipse cx="110" cy="${CY}" rx="${R + 48}" ry="${R + 44}" fill="url(#orbHalo)" opacity="${parado ? .3 : .95}"/>
+    <g opacity="${op}">
+      <ellipse cx="110" cy="${CY}" rx="${R - 8}" ry="${R - 10}" fill="url(#orbCorpo)"/>
+      <g transform="translate(110,${CY})">
+        <path class="memb m1" d="${cascaD(R - 5, 8, 4, 0)}" fill="${cor}" fill-opacity=".10" stroke="${cor}" stroke-width="2" opacity=".6"/>
+        <path class="memb m2" d="${cascaD(R - 14, 6, 5, 1.7)}" fill="${claro}" fill-opacity=".07" stroke="${claro}" stroke-width="1.4" opacity=".36"/>
+      </g>
+      <ellipse cx="${110 - R * .3}" cy="${CY - R * .34}" rx="${R * .3}" ry="${R * .22}" fill="#eafffb" opacity=".12" transform="rotate(-28 ${110 - R * .3} ${CY - R * .34})"/>
+      ${faisca}
+      <circle class="nucleo" cx="110" cy="${CY}" r="34" fill="url(#orbNucleo)"/>
+      <g class="gnuc">${nuc}</g>
+      <circle cx="110" cy="${CY}" r="${R - 8}" fill="none" stroke="${cor}" stroke-width="1.2" opacity=".3"/>
+    </g>
+    <path d="M94 ${CY + R - 16} q16 14 32 0 v38 h-32z" fill="#223a40" opacity=".9"/>
+    <rect x="86" y="236" width="48" height="34" rx="5" fill="#2a3b42"/>
+    <rect x="66" y="266" width="88" height="13" rx="4" fill="#1f2d33"/>
+    <rect x="58" y="240" width="104" height="26" rx="4" fill="${parado ? '#4a5d62' : '#0f8f86'}"/>
+    <text x="110" y="257" text-anchor="middle" font-size="11" font-weight="700" letter-spacing=".08em" fill="#fff">CÉREBRO</text>
   </g></g>`;
 }
 function cena(estados) {
@@ -171,30 +244,34 @@ function cena(estados) {
   // ligações: tudo sai do Cérebro e chega em cada agente do andar de baixo
   const cerebroTrab = estados[0].k === 'trab';
   const fios = AG.slice(1).map((a, n) => {
-    const p = POS[n + 1], x0 = 625 + (n - (NB - 1) / 2) * 28;
+    const p = POS[n + 1], x0 = CX + (n - (NB - 1) / 2) * 30;
     return `<path d="M${x0} 296 C ${x0} 330, ${p.x} 318, ${p.x} ${ANDAR + 62}" fill="none" stroke="${a.cor}" stroke-width="3" opacity=".55" stroke-linecap="round"/>` +
       `<path class="fluxo${cerebroTrab ? ' rapido' : ''}" d="M${x0} 296 C ${x0} 330, ${p.x} 318, ${p.x} ${ANDAR + 62}" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="4 14" stroke-linecap="round" opacity=".9"/>` +
       `<circle cx="${p.x}" cy="${ANDAR + 62}" r="5" fill="${a.cor}"/>`;
   }).join('');
   const piso = ANDAR + 207;
   return `<svg viewBox="0 ${Y0} ${W} ${H}" role="img" aria-label="Escritório dos agentes: o Cérebro no andar de cima, ligado aos outros agentes">
-    <defs>${clipsLocais}<radialGradient id="halo"><stop offset="0" stop-color="#ffe7a8" stop-opacity=".75"/><stop offset="1" stop-color="#ffe7a8" stop-opacity="0"/></radialGradient></defs>
+    <defs>${clipsLocais}
+      <radialGradient id="halo"><stop offset="0" stop-color="#9ff3e8" stop-opacity=".55"/><stop offset="1" stop-color="#9ff3e8" stop-opacity="0"/></radialGradient>
+      <radialGradient id="orbHalo"><stop offset="0" stop-color="#4fe3d2" stop-opacity=".5"/><stop offset=".55" stop-color="#2fd4c4" stop-opacity=".16"/><stop offset="1" stop-color="#2fd4c4" stop-opacity="0"/></radialGradient>
+      <radialGradient id="orbCorpo" cx=".38" cy=".32"><stop offset="0" stop-color="#1d6f73" stop-opacity=".82"/><stop offset=".62" stop-color="#0d4a52" stop-opacity=".72"/><stop offset="1" stop-color="#07323a" stop-opacity=".88"/></radialGradient>
+      <radialGradient id="orbNucleo"><stop offset="0" stop-color="#eafffb"/><stop offset=".45" stop-color="#5fe8d8" stop-opacity=".55"/><stop offset="1" stop-color="#2fd4c4" stop-opacity="0"/></radialGradient></defs>
     <!-- andar de cima: sala do Cérebro -->
     <rect y="${Y0}" width="${W}" height="${207 - Y0}" fill="#f5f2e8"/>
     <rect y="207" width="${W}" height="8" fill="#e2dccb"/>
     <rect y="215" width="${W}" height="${ANDAR - 215}" fill="#ebe5d4"/>
     ${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(j => `<line x1="${j * 125}" y1="215" x2="${j * 125 - 30}" y2="${ANDAR}" stroke="#e0d9c6" stroke-width="1.5"/>`).join('')}
-    <ellipse cx="625" cy="150" rx="210" ry="120" fill="url(#halo)"/>
+    <ellipse cx="${CX}" cy="150" rx="210" ry="130" fill="url(#halo)"/>
     <rect x="226" y="26" width="148" height="98" rx="4" fill="#fff" stroke="#d8d0bb" stroke-width="2"/>${ceu}
     <line x1="300" y1="32" x2="300" y2="118" stroke="#fff" stroke-width="4"/><line x1="232" y1="75" x2="368" y2="75" stroke="#fff" stroke-width="4"/>
     <circle cx="110" cy="62" r="30" fill="#fff" stroke="#d8d0bb" stroke-width="3"/>
     <text id="esc-relogio" x="110" y="68" text-anchor="middle" font-size="16" font-weight="600" fill="#1c1c1c">${hhmm()}</text>
     <text x="110" y="108" text-anchor="middle" font-size="10" fill="#8a929a">Brasília</text>
-    <rect x="902" y="28" width="76" height="92" rx="6" fill="#00503c"/>
-    <image href="assets/coruja-branca.png" x="916" y="38" width="48" height="48"/>
-    <text x="940" y="104" text-anchor="middle" font-size="9.5" font-weight="600" fill="#fff">MEU</text>
-    <text x="940" y="115" text-anchor="middle" font-size="9.5" font-weight="600" fill="#fff">PATRIMÔNIO</text>
-    ${planta(1100, 0)}${planta(150, 0)}
+    <rect x="712" y="28" width="76" height="92" rx="6" fill="#00503c"/>
+    <image href="assets/coruja-branca.png" x="726" y="38" width="48" height="48"/>
+    <text x="750" y="104" text-anchor="middle" font-size="9.5" font-weight="600" fill="#fff">MEU</text>
+    <text x="750" y="115" text-anchor="middle" font-size="9.5" font-weight="600" fill="#fff">PATRIMÔNIO</text>
+    ${planta(830, 0)}${planta(150, 0)}
     <!-- piso do mezanino -->
     <rect y="${ANDAR - 8}" width="${W}" height="14" fill="#cfc6b0"/>
     <rect y="${ANDAR + 6}" width="${W}" height="4" fill="#b9af97" opacity=".6"/>
@@ -203,9 +280,10 @@ function cena(estados) {
     <rect y="${piso}" width="${W}" height="8" fill="#d6dfd9"/>
     <rect y="${piso + 8}" width="${W}" height="${Y0 + H - piso - 8}" fill="#e2e8e3"/>
     ${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(j => `<line x1="${j * 125}" y1="${piso + 8}" x2="${j * 125 - 30}" y2="${Y0 + H}" stroke="#d4dcd6" stroke-width="1.5"/>`).join('')}
-    ${planta(15, ANDAR)}${planta(1235, ANDAR)}
+    ${planta(15, ANDAR)}${planta(845, ANDAR)}
     ${fios}
-    ${AG.map((a, i) => robo(a, estados[i].k, i, POS[i].x, POS[i].y)).join('')}
+    ${AG.map((a, i) => i === 0 ? orbe(a, estados[i].k, POS[i].x)
+                                : robo(a, estados[i].k, i, POS[i].x, POS[i].y)).join('')}
     ${todosDormem && !dia ? `<rect y="${Y0}" width="${W}" height="${H}" fill="#0b1630" opacity=".28"/>` : ''}
   </svg>`;
 }
@@ -214,12 +292,12 @@ function cena(estados) {
 function montar() {
   const box = document.getElementById('escritorio'); if (!box) return;
   const ags = (ST && ST.agentes) || [];
-  const est = AG.map(a => estado(a, ags.find(x => x.id === a.id)));
+  const est = AG.map(a => estado(a, dadosDe(a, ags)));
   const assin = est.map(e => e.k).join('|') + (minBR() >= 360 && minBR() < 1080 ? 'd' : 'n');
   if (!box.querySelector('.esc-card') || assin !== ASSIN) {
     ASSIN = assin;
     box.innerHTML = `<div class="esc-card">
-      <div class="esc-top"><div><h2>Escritório dos agentes</h2><p>O Cérebro fica no andar de cima: é a central que alimenta os outros agentes. Atualiza sozinho a cada 30 segundos.</p></div>
+      <div class="esc-top"><div><h2>Escritório dos agentes</h2><p>O Cérebro fica no andar de cima e alimenta todo mundo. Embaixo, a Patrícia atende e os dois agentes de apoio conferem o trabalho dela. Atualiza sozinho a cada 30 segundos.</p></div>
         <div class="esc-resumo" id="esc-resumo"></div></div>
       <div class="esc-wrap"><div class="esc-cena" id="esc-cena">${cena(est)}</div></div>
       <div class="esc-cards" id="esc-cards"></div></div>`;
@@ -229,7 +307,8 @@ function montar() {
   cenaEl.querySelectorAll('.bolha').forEach(b => b.remove());
   est.forEach((e, i) => {
     const b = document.createElement('div');
-    b.className = 'bolha ' + e.k + (i === 0 ? ' central' : ''); b.style.left = (POS[i].x / W * 100) + '%'; b.style.bottom = (100 - (POS[i].y + 64 - Y0) / H * 100) + '%';
+    b.className = 'bolha ' + e.k + (i === 0 ? ' cerebro' : ''); b.style.left = (POS[i].x / W * 100) + '%';
+    b.style.bottom = (100 - (POS[i].y + (i === 0 ? -20 : 64) - Y0) / H * 100) + '%';
     b.innerHTML = ESC(e.b) + (e.s ? `<small>${ESC(e.s)}</small>` : '');
     cenaEl.appendChild(b);
   });
@@ -241,10 +320,10 @@ function montar() {
     (n('dorme') ? `<span><b>${n('dorme')}</b> dormindo</span>` : '') +
     (n('erro') + n('atraso') + n('off') ? `<span style="background:#fdecea;color:#b42318"><b>${n('erro') + n('atraso') + n('off')}</b> precisando de atenção</span>` : '');
   document.getElementById('esc-cards').innerHTML = AG.map((a, i) => {
-    const d = ags.find(x => x.id === a.id) || {}, e = est[i], m = minBR(), naJ = m >= a.ini && m <= a.fim;
+    const d = dadosDe(a, ags) || {}, e = est[i], m = minBR(), naJ = m >= a.ini && m <= a.fim;
     const prox = !d.ativo ? '–' : !naJ ? 'amanhã às ' + horaIni(a) : d.ultima ? em(t(d.ultima.em) + a.int * 60e3 - Date.now()) : '–';
     const st = d.ultima ? (d.ultima.status === 'error' ? ' · <b style="color:#b42318">erro</b>' : d.ultima.status === 'success' ? ' · ok' : ' · ' + ESC(d.ultima.status)) : '';
-    return `<div class="ag${i === 0 ? ' central' : ''}"><div class="ag-h"><i style="background:${a.cor}"></i><b>${a.nome}</b></div>
+    return `<div class="ag${i === 0 ? ' cerebro' : ''}"><div class="ag-h"><i style="background:${a.cor}"></i><b>${a.nome}</b></div>
       <div class="ag-f">${ESC(a.funcao)}</div>
       <span class="pill p-${e.k}">${ESC(e.rot)}</span>
       <div class="ag-l"><span>Última rodada:</span> ${d.ultima ? ha(d.ultima.em) + st : '–'}<br>

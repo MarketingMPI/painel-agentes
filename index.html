@@ -48,6 +48,24 @@ header{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid v
 .hin{max-width:1180px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:12px}
 .hin img{width:30px;height:30px}
 .htit{font-weight:600;font-size:17px;line-height:1.1}
+.abas{margin-left:auto;display:flex;gap:4px;background:#f1f4f2;border-radius:999px;padding:4px}
+.abas button{display:inline-flex;align-items:center;gap:7px;border:0;background:transparent;cursor:pointer;
+  font:600 13.5px/1 'Campton',system-ui,sans-serif;color:var(--muted-fg);padding:9px 16px;border-radius:999px;transition:background .15s,color .15s}
+.abas button svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.abas button:hover{color:var(--verde)}
+.abas button.on{background:var(--verde);color:#fff;box-shadow:0 1px 3px rgba(0,80,60,.25)}
+.escwrap{background:linear-gradient(135deg,#0d3f45 0%,#07262c 100%);color:#fff;padding:26px 0 30px}
+.escin{max-width:1180px;margin:0 auto;padding:0 20px}
+.escin h1{font-size:30px;font-weight:600;margin:0 0 6px}
+.escin p{margin:0;max-width:720px;color:#b9e7e0;font-size:14.5px;line-height:1.5}
+.esc-main{max-width:1180px;margin:0 auto;padding:22px 20px 40px}
+@media(max-width:820px){
+  .hin{flex-wrap:wrap;row-gap:10px}
+  .abas{margin-left:0;width:100%;order:9;box-sizing:border-box}
+  .abas button{flex:1;justify-content:center;padding:9px 8px}
+  .escin h1{font-size:24px}
+  .esc-main{padding:14px 12px 30px}
+}
 .htit small{display:block;font-weight:400;font-size:12px;color:var(--muted-fg);margin-top:2px}
 .usr{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted-fg)}
 .usr button{border:1px solid var(--border);background:#fff;border-radius:8px;padding:6px 11px;font-size:13px;color:var(--fg)}
@@ -203,8 +221,15 @@ svg.chart text{font-family:inherit;fill:#8a929a;font-size:11px}
       <b></b>
     </div>
     <div class="htit">Painel Patrícia<small>Meu Patrimônio · atendimento no WhatsApp</small></div>
+    <nav class="abas" id="abas">
+      <button data-v="painel" class="on" aria-current="page">Painel</button>
+      <button data-v="escritorio">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-5h6v5"/></svg>Escritório
+      </button>
+    </nav>
     <div class="usr" id="usr"></div>
   </div></header>
+  <div id="v-painel">
   <div class="herowrap"><div class="heroin">
     <div class="face"><img src="assets/patricia.jpg" alt="Patrícia"><em></em></div>
     <div>
@@ -242,10 +267,20 @@ svg.chart text{font-family:inherit;fill:#8a929a;font-size:11px}
     </div>
     <div id="mppro"></div>
     <div id="verificador" class="vf-fim"></div>
-    <h2 class="sec-tit">Escritório dos agentes</h2>
-    <div id="escritorio"></div>
     <div class="rodape"><span id="atual"></span><span>Atualiza sozinho a cada 2 minutos</span></div>
   </main>
+  </div>
+
+  <div id="v-escritorio" class="hidden">
+    <div class="escwrap"><div class="escin">
+      <h1>Escritório</h1>
+      <p>Onde a Patrícia e os agentes de apoio trabalham. O desenho é ao vivo: cada robô mostra o que está fazendo agora.</p>
+    </div></div>
+    <main class="esc-main">
+      <div id="escritorio"></div>
+      <div class="rodape"><span>Atualiza sozinho a cada 30 segundos</span></div>
+    </main>
+  </div>
 </div>
 
 <script>
@@ -416,10 +451,29 @@ function mostraLogin(msg) { $('app').classList.add('hidden'); $('lock').classLis
 function sair() { limpaSessao(); mostraLogin(''); }
 function abreApp() {
   const x = lerSessao();
+  function abrir(v) {
+    const esc = v === 'escritorio';
+    $('v-painel').classList.toggle('hidden', esc);
+    $('v-escritorio').classList.toggle('hidden', !esc);
+    document.querySelectorAll('#abas button').forEach(b => {
+      const on = b.dataset.v === v;
+      b.classList.toggle('on', on);
+      if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+    });
+    if (location.hash !== (esc ? '#escritorio' : '')) history.replaceState(null, '', esc ? '#escritorio' : location.pathname);
+    window.scrollTo(0, 0);
+    if (esc && window.Escritorio) Escritorio.iniciar();   // redesenha com dado fresco
+  }
+  document.getElementById('abas').addEventListener('click', e => {
+    const b = e.target.closest('button[data-v]'); if (b) abrir(b.dataset.v);
+  });
+  window.addEventListener('hashchange', () => abrir(location.hash === '#escritorio' ? 'escritorio' : 'painel'));
+
   $('lock').classList.add('hidden'); $('app').classList.remove('hidden');
   $('usr').innerHTML = `<span>${ESC(x ? x.e : '')}</span><button type="button" id="bsair">Sair</button>`;
   render(); carregar();
   if (window.Escritorio) Escritorio.iniciar();
+  abrir(location.hash === '#escritorio' ? 'escritorio' : 'painel');
   if (window.Leads) Leads.iniciar();
   if (window.Verificador) Verificador.iniciar();
   if (window.MpPro) MpPro.iniciar();
