@@ -27,6 +27,10 @@ Não apague fonte dessa lista sem mover o monitoramento para outro lugar — o f
 - Dados: função `public.agentes_status()`, alimentada a cada minuto pelo fluxo do n8n "[AGENTES] Painel - Status dos agentes" (`build_status.py`).
 - Código: `escritorio.js` e `escritorio.css`.
 
+## Campanha PGBL
+
+Quadro "Campanha de PGBL" no topo de "Como foi o período" (aparece quando há conversa de origem `pgbl` no período, ou com o filtro de origem "PGBL"). Conta os leads do anúncio no Meta e do e-mail: quantos chegaram, quantos responderam à pergunta do IR e foram ao consultor, quantos não responderam em 24 h (vão ao consultor assim mesmo), quantos esperam resposta, e a contagem regressiva até o prazo de 23/12. O status `pgbl` entrou como resultado final em `agentes_painel()`.
+
 ## Agente MP PRO · conversas sobre o MP PRO
 
 Seção `#mppro` (`mppro.js` e `mppro.css`), logo antes do Verificador. Lê a RPC `mppro_painel()` (Supabase MP GLOBAL, tabela `mppro_turnos`, gravada pelo fluxo n8n "[AGENTES] WhatsApp - MP PRO (atendimento)"). Começa fechada, só com os números (conversas, profissionais que receberam o link, alunos passados à equipe, investidores levados ao Diagnóstico, em andamento); "Ver tudo" abre a lista com perfil, resultado, resumo e "Ver conversa". No escritório, o MP PRO é o 6º robô (champagne, com "PRO" no peito).

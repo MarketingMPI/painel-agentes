@@ -7,3 +7,14 @@ table.mp{min-width:900px}
 @media (max-width:900px){.mp-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:560px){.mp-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .mp .ln small{white-space:nowrap}
+
+/* Campanha PGBL */
+.pgcard{margin:0 0 18px}
+.pg-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.pg-tag{display:inline-block;background:#0e7490;color:#fff;font-size:11px;font-weight:700;letter-spacing:.08em;padding:3px 8px;border-radius:999px;margin-right:6px;vertical-align:2px}
+.pg-prazo{font-size:13px;color:#0e7490}
+.pg-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:10px;margin-top:12px}
+.pg-kpis>div{background:#f3f7f8;border-radius:10px;padding:10px 12px}
+.pg-kpis b{display:block;font-size:24px;line-height:1.1;color:#1c1c1c}
+.pg-kpis span{font-size:12px;color:#69727d}
+.pg-kpis .pg-ok{background:#e3f2f5}.pg-kpis .pg-ok b{color:#0e7490}

@@ -18,7 +18,7 @@
 :root{
   --verde:#00503c;--verde-prof:#003326;--lima:#00a611;--lima-cl:#61ce70;
   --fg:#1c1c1c;--muted:#f4f5f4;--muted-fg:#69727d;--border:#e4e7e5;--card:#fff;
-  --c-req:#00a611;--c-fora:#9aa3ab;--c-sem:#e0a43a;--c-eq:#3b6fd8;--c-and:#c9ead0;--c-ind:#7a5cc4;
+  --c-req:#00a611;--c-fora:#9aa3ab;--c-sem:#e0a43a;--c-eq:#3b6fd8;--c-and:#c9ead0;--c-ind:#7a5cc4;--c-pgbl:#0e7490;
   --sh-xs:0 1px 2px rgba(16,24,20,.05);--sh-md:0 4px 14px rgba(16,24,20,.07);--r:12px
 }
 *{box-sizing:border-box}
@@ -245,7 +245,7 @@ svg.chart text{font-family:inherit;fill:#8a929a;font-size:11px}
         <button data-p="hoje">Hoje</button><button data-p="7d">7 dias</button><button data-p="30d">30 dias</button><button data-p="mes">Este mês</button><button data-p="tudo">Tudo</button>
       </div></div>
       <div><span class="flab">Origem</span><div class="seg" id="forg">
-        <button data-o="todas">Todas</button><button data-o="lp">LP do Diagnóstico</button><button data-o="site">Botão do site</button><button data-o="indique">Indique e Ganhe</button>
+        <button data-o="todas">Todas</button><button data-o="lp">LP do Diagnóstico</button><button data-o="site">Botão do site</button><button data-o="indique">Indique e Ganhe</button><button data-o="pgbl">PGBL</button>
       </div></div>
       <div class="periodo-txt" id="ptxt"></div>
     </div>
@@ -366,6 +366,7 @@ const RES = [
   ['sem_interesse', 'Sem interesse', 'var(--c-sem)'],
   ['humano', 'Passaram para a equipe', 'var(--c-eq)'],
   ['indicacao', 'Indique e Ganhe orientados', 'var(--c-ind)'],
+  ['pgbl', 'PGBL passados ao consultor', 'var(--c-pgbl)'],
   ['conversando', 'Em andamento', 'var(--c-and)'],
 ];
 function kpi(l, v, s, cor, dest) {
@@ -418,6 +419,23 @@ function render(aviso) {
     `<div class="n"><div class="lab"><i style="background:var(--c-req)"></i>Requalificados</div><div class="val">${nf.format(req)}</div><div class="pe">foram para um consultor</div></div>` +
     `<div class="n"><div class="lab"><i style="background:var(--c-fora)"></i>Fora do perfil</div><div class="val">${nf.format(fora)}</div><div class="pe">Base de Relacionamento</div></div>` +
     '</div>';
+  // Campanha PGBL (Meta Ads + e-mail): a Patrícia agradece, pergunta do IR e passa ao consultor
+  const pg = cv.filter(c => c.origem === 'pgbl');
+  if (pg.length || S.o === 'pgbl') {
+    const hojeBR = diaBR(new Date()), fimCamp = '2026-12-23';
+    const faltam = Math.round((new Date(fimCamp + 'T12:00:00Z') - new Date(hojeBR + 'T12:00:00Z')) / 864e5);
+    const pgRes = pg.filter(c => c.status === 'pgbl' && !c.abandono).length, pgSem = pg.filter(c => c.status === 'pgbl' && c.abandono).length;
+    const pgAnd = pg.filter(c => c.status === 'conversando').length, pgOut = pg.length - pgRes - pgSem - pgAnd;
+    h += `<div class="card pgcard"><div class="pg-top"><h3><span class="pg-tag">PGBL</span> Campanha de PGBL</h3>` +
+      `<span class="pg-prazo">${faltam > 0 ? `faltam <b>${faltam}</b> dia${faltam > 1 ? 's' : ''} para o prazo de 23/12` : faltam === 0 ? '<b>hoje</b> é o último dia (23/12)' : 'prazo de 23/12 encerrado'}</span></div>` +
+      `<div class="c-s">Leads do anúncio no Meta e do e-mail. A Patrícia agradece, pergunta se a pessoa declara o IR no modelo completo e passa para um consultor (negócio PGBL-ADS ou PGBL-MAIL no Funil Alpha).</div>` +
+      `<div class="pg-kpis"><div><b>${nf.format(pg.length)}</b><span>chegaram no período</span></div>` +
+      `<div class="pg-ok"><b>${nf.format(pgRes)}</b><span>responderam e foram ao consultor</span></div>` +
+      `<div><b>${nf.format(pgSem)}</b><span>sem resposta em 24 h (consultor tenta assim mesmo)</span></div>` +
+      `<div><b>${nf.format(pgAnd)}</b><span>esperando a resposta</span></div>` +
+      (pgOut ? `<div><b>${nf.format(pgOut)}</b><span>outro desfecho (outro pedido ou equipe assumiu)</span></div>` : '') +
+      '</div></div>';
+  }
   if (!cv.length) {
     h += `<div class="card"><div class="vazio">Nenhuma conversa começou neste período${S.o !== 'todas' ? ' com esta origem' : ''}.</div></div>`;
   } else {
