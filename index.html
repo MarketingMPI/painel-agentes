@@ -428,7 +428,7 @@ function render(aviso) {
     const pgAnd = pg.filter(c => c.status === 'conversando').length, pgOut = pg.length - pgRes - pgSem - pgAnd;
     h += `<div class="card pgcard"><div class="pg-top"><h3><span class="pg-tag">PGBL</span> Campanha de PGBL</h3>` +
       `<span class="pg-prazo">${faltam > 0 ? `faltam <b>${faltam}</b> dia${faltam > 1 ? 's' : ''} para o prazo de 23/12` : faltam === 0 ? '<b>hoje</b> é o último dia (23/12)' : 'prazo de 23/12 encerrado'}</span></div>` +
-      `<div class="c-s">Leads do anúncio no Meta e do e-mail. A Patrícia agradece, pergunta se a pessoa declara o IR no modelo completo e passa para um consultor (negócio PGBL-ADS ou PGBL-MAIL no Funil Alpha).</div>` +
+      `<div class="c-s">Leads do anúncio no Meta e do e-mail. A Patrícia pergunta se a pessoa declara no modelo completo e passa para um consultor (negócio PGBL-ADS ou PGBL-MAIL no Funil Alpha, etiquetas Digital e PGBL-2026).</div>` +
       `<div class="pg-kpis"><div><b>${nf.format(pg.length)}</b><span>chegaram no período</span></div>` +
       `<div class="pg-ok"><b>${nf.format(pgRes)}</b><span>responderam e foram ao consultor</span></div>` +
       `<div><b>${nf.format(pgSem)}</b><span>sem resposta em 24 h (consultor tenta assim mesmo)</span></div>` +
